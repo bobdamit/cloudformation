@@ -1,6 +1,9 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: 'AWS CloudFormation template to create VPC, Subnets, Internet Gateway, Route Tables, and VPC Endpoint'
 
+# This template will create a VPC with a single public and single private subnet 
+# It also has a gateway endpoint to S3
+
 Resources:
 
   VPC:

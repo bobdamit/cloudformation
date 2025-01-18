@@ -1,0 +1,30 @@
+
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Creates an EBS volume for use with Docker on AWS.
+
+Parameters:
+  VolumeSize:
+    Type: Number
+    Default: 20
+    Description: Size of the EBS volume in GiB.
+
+  AvailabilityZone:
+    Type: String
+    Description: The AZ where the EBS volume will be created.
+
+Resources:
+  PersistentEBSVolume:
+    Type: AWS::EC2::Volume
+    Properties:
+      Size: !Ref VolumeSize
+      AvailabilityZone: !Ref AvailabilityZone
+      VolumeType: gp3
+      Tags:
+           - Key: name
+             Value: rs-db-vol-0
+
+Outputs:
+  VolumeId:
+    Value: !Ref PersistentEBSVolume
+    Export:
+      Name: PersistentEBSVolumeId

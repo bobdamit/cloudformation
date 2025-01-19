@@ -11,6 +11,7 @@ Parameters:
   AvailabilityZone:
     Type: String
     Description: The AZ where the EBS volume will be created.
+    Default: us-east-1a
 
 Resources:
   PersistentEBSVolume:

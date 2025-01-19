@@ -1,0 +1,68 @@
+name: Deploy Mongo/MySQL EC2 Instance CF Stack
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "iac-ec2-mongo-mysql.yaml"
+  workflow_dispatch:
+
+env:
+  AWS_REGION: us-east-1
+  STACK_NAME: iac-ec2-mongo-mysql
+  TEMPLATE_FILE: iac-ec2-mongo-mysql.yaml
+  AMI_ID: ami-0ec0e22a9d68ce829
+  VPC_NAME: rs-apps-0-vpc
+  PRIVATE_SUBNET_NAME: rs-apps-0-private-subnet1-us-east-1a
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Resolve VPC ID
+        id: resolve-vpc
+        run: |
+          VPC_ID=$(aws ec2 describe-vpcs \
+            --filters "Name=tag:Name,Values=${VPC_NAME}" \
+            --query "Vpcs[0].VpcId" \
+            --output text)
+          echo "Resolved VPC ID: $VPC_ID"
+          echo "VPC_ID=$VPC_ID" >> $GITHUB_ENV
+
+      - name: Get subnet IDs
+        id: subnet
+        run: |
+          SUBNET_ID=$(aws ec2 describe-subnets \
+            --filters "Name=tag:Name,Values=${PRIVATE_SUBNET_NAME}" \
+            --query "Subnets[0].SubnetId" \
+            --output text)
+          echo "Resolved Private Subnet ID: $SUBNET_ID"
+          echo "SUBNET_ID=${SUBNET_ID}" >> $GITHUB_ENV
+
+      - name: Deploy CloudFormation stack
+        uses: aws-actions/aws-cloudformation-github-deploy@v1
+        with:
+          name: ${{ env.STACK_NAME }}
+          template: ${{ env.TEMPLATE_FILE }}
+          parameter-overrides: >-
+            ImageId=${{ env.AMI_ID }},
+            VpcId=${{ env.VPC_ID }},
+            SubnetId=${{ env.SUBNET_ID }},
+            InstanceType=t2.micro,
+            KeyName=${{ secrets.EC2_KEY_NAME }},
+            MongoPort=27017,
+            MySQLPort=3306,
+            MongoRootPassword=${{ secrets.MONGO_ROOT_PASSWORD }},
+            MySQLRootPassword=${{ secrets.MYSQL_ROOT_PASSWORD }}
+          capabilities: CAPABILITY_NAMED_IAM
+          no-fail-on-empty-changeset: "1"

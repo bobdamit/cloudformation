@@ -4,7 +4,7 @@ on:
   push:
     branches: [main]
     paths:
-      - "iac-apps-vpc-and-more.yaml"
+      - "vpc/iac-apps-vpc-and-more.yaml"
   workflow_dispatch:
 
 jobs:
@@ -25,7 +25,7 @@ jobs:
         uses: aws-actions/aws-cloudformation-github-deploy@v1
         with:
           name: rs-apps-0
-          template: iac-apps-vpc-and-more.yaml
+          template: vpc/iac-apps-vpc-and-more.yaml
           no-fail-on-empty-changeset: "1"
           parameter-overrides: >-
             Environment=prod,

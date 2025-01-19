@@ -23,7 +23,6 @@ Resources:
       Tags:
            - Key: name
              Value: rs-db-vol-0
-
 Outputs:
   VolumeId:
     Value: !Ref PersistentEBSVolume

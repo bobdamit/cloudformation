@@ -55,7 +55,7 @@ jobs:
           name: ${{ env.STACK_NAME }}
           template: ${{ env.TEMPLATE_FILE }}
           parameter-overrides: >-
-            ImageId=${{ env.AMI_ID }},
+            AmiId=${{ env.AMI_ID }},
             VpcId=${{ env.VPC_ID }},
             SubnetId=${{ env.SUBNET_ID }},
             InstanceType=t2.micro,

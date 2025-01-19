@@ -21,7 +21,7 @@ Resources:
       AvailabilityZone: !Ref AvailabilityZone
       VolumeType: gp3
       Tags:
-           - Key: name
+           - Key: Name
              Value: rs-db-vol-0
 Outputs:
   VolumeId:

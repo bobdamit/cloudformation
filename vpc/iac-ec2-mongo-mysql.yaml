@@ -7,7 +7,7 @@ Parameters:
   SubnetId:
     Type: AWS::EC2::Subnet::Id
   AmiId:
-    Type: AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>
+    Type: String
   ComposeS3Bucket:
     Type: String
     Description: S3 bucket name where the Docker Compose file is stored
@@ -44,7 +44,7 @@ Resources:
     Properties:
       InstanceType: t3.micro
       KeyName: my-key-pair # Replace with your key pair
-      ImageId: ami-0abcdef1234567890 # Replace with a valid AMI ID for your region
+      ImageId: !Ref AmiId
       BlockDeviceMappings:
         - DeviceName: /dev/xvda
           Ebs:

@@ -1,4 +1,3 @@
-
 AWSTemplateFormatVersion: '2010-09-09'
 Description: Creates an EBS volume for use with Docker on AWS.
 
@@ -20,9 +19,10 @@ Resources:
       Size: !Ref VolumeSize
       AvailabilityZone: !Ref AvailabilityZone
       VolumeType: gp3
+      Encrypted: true
       Tags:
-           - Key: Name
-             Value: rs-db-vol-0
+        - Key: Name
+          Value: rs-db-vol-0
 Outputs:
   VolumeId:
     Value: !Ref PersistentEBSVolume

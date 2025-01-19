@@ -101,18 +101,6 @@ Outputs:
     Export:
       Name: !Sub '${AWS::StackName}-VPCID'
 
-  PublicSubnets:
-    Description: A list of the public subnets
-    Value: !Join [ ',', [ !Ref PublicSubnet1 ]]
-    Export:
-      Name: !Sub '${AWS::StackName}-PublicSubnets'
-
-  PrivateSubnets:
-    Description: A list of the private subnets
-    Value: !Join [ ',', [ !Ref PrivateSubnet1 ]]
-    Export:
-      Name: !Sub '${AWS::StackName}-PrivateSubnets'
-
   PublicSubnet1:
     Description: A reference to the public subnet in the 1st Availability Zone
     Value: !Ref PublicSubnet1

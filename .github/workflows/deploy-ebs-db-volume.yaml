@@ -4,7 +4,7 @@ on:
   push:
     branches: [main]
     paths:
-      - "iac-data-ebs-vol.yaml"
+      - "vpc/iac-data-ebs-vol.yaml"
   workflow_dispatch:
 
 jobs:

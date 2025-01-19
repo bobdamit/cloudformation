@@ -10,7 +10,7 @@ on:
 env:
   AWS_REGION: us-east-1
   STACK_NAME: iac-ec2-mongo-mysql
-  TEMPLATE_FILE: iac-ec2-mongo-mysql.yaml
+  TEMPLATE_FILE: vpc/iac-ec2-mongo-mysql.yaml
   AMI_ID: ami-0ec0e22a9d68ce829
   VPC_NAME: rs-apps-0-vpc
   PRIVATE_SUBNET_NAME: rs-apps-0-private-subnet1-us-east-1a

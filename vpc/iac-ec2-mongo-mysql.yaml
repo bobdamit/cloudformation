@@ -75,6 +75,7 @@ Resources:
     Properties:
       ImageId: !Ref AmiId
       InstanceType: t3.micro
+      SubnetId: !Ref SubnetId
       SecurityGroupIds: 
         - !Ref SecurityGroupSSH
         - !Ref DBSecurityGroup

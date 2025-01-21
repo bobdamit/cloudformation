@@ -37,6 +37,7 @@ Resources:
     Properties:
       GroupDescription: Allow SSH access
       SubnetId: !Ref SubnetId
+      VpcId: !Ref VpcId
       SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: 22
@@ -51,6 +52,7 @@ Resources:
     Properties:
       GroupDescription: Allow DB access
       SubnetId: !Ref SubnetId
+      VpcId: !Ref VpcId
       SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: 3306
@@ -63,8 +65,8 @@ Resources:
           CidrIp: 0.0.0.0/0
           Description: Mongo
       Tags:
-           - Value: Name
-             Key: db-sg
+        - Value: Name
+          Key: db-sg
 
   EC2Instance:
     Type: AWS::EC2::Instance

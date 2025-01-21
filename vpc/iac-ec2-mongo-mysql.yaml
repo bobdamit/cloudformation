@@ -76,7 +76,7 @@ Resources:
           export MONGO_PASSWORD=${MongoPassword}
           export MYSQL_ROOT_PASSWORD=${MysqlRootPassword}
 
-          aws s3 cp s3://${ComposeS3Bucket}/${ComposeS3Key} /home/ec2-user/docker-compose.yml
+          aws s3 cp s3://${ComposeS3Bucket}/${ComposeS3Key} /home/ec2-user/docker-compose.yaml
           cd /home/ec2-user
           docker compose up -d
 

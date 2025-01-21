@@ -14,7 +14,7 @@ env:
   AMI_ID: ami-0ec0e22a9d68ce829
   MONGODB_USER: userofthemongo
   VPC_NAME: rs-apps-0-vpc
-  PRIVATE_SUBNET_NAME: rs-apps-0-private-subnet1-us-east-1a
+  PRIVATE_SUBNET_NAME: rs-apps-0-subnet-private1-us-east-1a
   DEPLOY_BUCKET: rs-deploy-artifacts-0
 
 jobs:

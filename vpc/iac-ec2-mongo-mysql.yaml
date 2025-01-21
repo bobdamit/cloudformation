@@ -20,12 +20,15 @@ Parameters:
   MySQLRootPassword:
     Type: String
     Description: The root password for the MySQL database.
+    NoEcho : true
   MongoUser:
     Type: String
     Description: The user for the MongoDB database.
+    NoEcho : true
   MongoPassword:
     Type: String
     Description: The password for the MongoDB database.
+    NoEcho : true
 
     
 Resources:

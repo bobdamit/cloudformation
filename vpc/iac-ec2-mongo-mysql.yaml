@@ -112,9 +112,3 @@ Resources:
           cd /home/ec2-user
           docker compose up -d
 
-
-Outputs:
-  InstanceId:
-    Value: !Ref EC2Instance
-  EBSVolumeId:
-    Value: !Ref DockerEBSVol

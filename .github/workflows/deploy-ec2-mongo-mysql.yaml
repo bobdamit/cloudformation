@@ -75,8 +75,6 @@ jobs:
              KeyName=${{ secrets.EC2_KEY_NAME }},
              ComposeS3Bucket=${{ env.DEPLOY_BUCKET }},
              ComposeS3Key=docker/mongo-mysql-compose.yaml,
-             MongoPort=27017,
-             MySQLPort=3306,
              MongoUser=${{ env.MONGODB_USER }},
              MongoPassword=${{ secrets.MONGO_PASSWORD }},
              MySQLRootPassword=${{ secrets.MYSQL_ROOT_PASSWORD }}

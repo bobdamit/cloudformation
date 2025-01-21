@@ -32,7 +32,7 @@ Parameters:
 
     
 Resources:
-  MyEBSVolume:
+  DockerEBSVol:
     Type: AWS::EC2::Volume
     Properties:
       Size: 20 # Size in GB
@@ -51,32 +51,45 @@ Resources:
           ToPort: 22
           CidrIp: '0.0.0.0/0'
       SubnetId: !Ref SubnetId
-  #create a security group for mysql and mongo allowing traffic from the vpc
-  SecurityGroupDB:
+
+  DBSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupDescription: Allow MongoDB access
+      GroupName: DBSG
+      GroupDescription: Allow DB access
+      VpcId: vpc-0c976bfcd4ad6e88c
       SecurityGroupIngress:
-        - IpProtocol: tcp
-          FromPort: 27017
-          ToPort: 27017
-          CidrIp: '0.0.0.0/0'
         - IpProtocol: tcp
           FromPort: 3306
           ToPort: 3306
-          CidrIp: '0.0.0.0/0'
-      SubnetId: !Ref SubnetId
+          CidrIp: 0.0.0.0/0
+          Description: Mysql
+        - IpProtocol: tcp
+          FromPort: 27017
+          ToPort: 27017
+          CidrIp: 0.0.0.0/0
+          Description: Mongo
 
-  MyEC2Instance:
+  EC2Instance:
     Type: AWS::EC2::Instance
     Properties:
-      InstanceType: t3.micro
-      KeyName: my-key-pair # Replace with your key pair
       ImageId: !Ref AmiId
-      SubnetId: !Ref SubnetId
-      SecurityGroupIds:
-        - !Ref SecurityGroupSSH
-        - !Ref SecurityGroupDB
+      InstanceType: t3.micro
+      NetworkInterfaces:
+        - AssociatePublicIpAddress: false
+          DeviceIndex: 0
+          GroupId: !Ref DBSecurityGroup
+          SubnetId: subnet-0dbe7f344c3b2181f
+        - AssociatePublicIpAddress: false
+          DeviceIndex: 1
+          GroupId: !Ref SecurityGroupSSH
+          SubnetId: !Ref SubnetId
+      CreditSpecification:
+        CPUCredits: standard
+      PrivateDNSNameOptions:
+        HostnameType: ip-name
+        EnableResourceNameDnsARecord: false
+        EnableResourceNameDnsAAAARecord: false
       BlockDeviceMappings:
         - DeviceName: /dev/xvda
           Ebs:
@@ -115,6 +128,6 @@ Resources:
 
 Outputs:
   InstanceId:
-    Value: !Ref MyEC2Instance
+    Value: !Ref EC2Instance
   EBSVolumeId:
-    Value: !Ref MyEBSVolume
+    Value: !Ref DockerEBSVol

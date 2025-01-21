@@ -41,6 +41,7 @@ Resources:
       Tags:
         - Key: Name
           Value: docker-db-vol
+
   SecurityGroupSSH:
     Type: AWS::EC2::SecurityGroup
     Properties:
@@ -51,13 +52,15 @@ Resources:
           ToPort: 22
           CidrIp: '0.0.0.0/0'
       SubnetId: !Ref SubnetId
+      Tags:
+        - Key: Name
+          Value: sg-ssh
 
   DBSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupName: DBSG
       GroupDescription: Allow DB access
-      VpcId: vpc-0c976bfcd4ad6e88c
+      SubnetId: !Ref SubnetId
       SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: 3306
@@ -69,6 +72,9 @@ Resources:
           ToPort: 27017
           CidrIp: 0.0.0.0/0
           Description: Mongo
+      Tags:
+           - Value: Name
+             Key: db-sg
 
   EC2Instance:
     Type: AWS::EC2::Instance

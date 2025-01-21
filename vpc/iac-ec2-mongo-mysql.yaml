@@ -71,8 +71,8 @@ Resources:
     Properties:
       AvailabilityZone: us-east-1a
       SecurityGroupIds: 
-        - !Ref SSHSecurityGroup
-        - !Ref DBSecurityGroup
+        - !GetAtt DBSecurityGroup.GroupId
+        - !GetAtt SSHSecurityGroup.GroupId
       SourceDestCheck: false
       SubnetId: !Ref SubnetId
       ImageId: !Ref AmiId

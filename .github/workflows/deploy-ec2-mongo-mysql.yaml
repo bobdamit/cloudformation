@@ -71,8 +71,6 @@ jobs:
              VpcId=${{ env.VPC_ID }},
              SubnetId=${{ env.SUBNET_ID }},
              VolumeId=${{ env.VOLUME_ID }},
-             InstanceType=t2.micro,
-             KeyName=${{ secrets.EC2_KEY_NAME }},
              ComposeS3Bucket=${{ env.DEPLOY_BUCKET }},
              ComposeS3Key=docker/mongo-mysql-compose.yaml,
              MongoUser=${{ env.MONGODB_USER }},

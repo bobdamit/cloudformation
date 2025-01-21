@@ -40,7 +40,7 @@ Resources:
       VolumeType: gp3 # General Purpose SSD
       Tags:
         - Key: Name
-          Value: DataVolume
+          Value: docker-db-vol
   SecurityGroupSSH:
     Type: AWS::EC2::SecurityGroup
     Properties:
@@ -50,6 +50,7 @@ Resources:
           FromPort: 22
           ToPort: 22
           CidrIp: '0.0.0.0/0'
+      SubnetId: !Ref SubnetId
   #create a security group for mysql and mongo allowing traffic from the vpc
   SecurityGroupDB:
     Type: AWS::EC2::SecurityGroup
@@ -64,7 +65,6 @@ Resources:
           FromPort: 3306
           ToPort: 3306
           CidrIp: '0.0.0.0/0'
-      VpcId: !Ref VpcId
       SubnetId: !Ref SubnetId
 
   MyEC2Instance:

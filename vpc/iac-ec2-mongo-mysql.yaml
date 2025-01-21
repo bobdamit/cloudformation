@@ -84,12 +84,6 @@ Resources:
           DeviceIndex: 1
           GroupId: !Ref SecurityGroupSSH
           SubnetId: !Ref SubnetId
-      CreditSpecification:
-        CPUCredits: standard
-      PrivateDNSNameOptions:
-        HostnameType: ip-name
-        EnableResourceNameDnsARecord: false
-        EnableResourceNameDnsAAAARecord: false
       BlockDeviceMappings:
         - DeviceName: /dev/xvda
           Ebs:

@@ -38,6 +38,31 @@ Resources:
       Tags:
         - Key: Name
           Value: DataVolume
+  SecurityGroupSSH:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Allow SSH access
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: '0.0.0.0/0'
+  #create a security group for mysql and mongo allowing traffic from the vpc
+  SecurityGroupDB:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Allow MongoDB access
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 27017
+          ToPort: 27017
+          CidrIp: '0.0.0.0/0'
+        - IpProtocol: tcp
+          FromPort: 3306
+          ToPort: 3306
+          CidrIp: '0.0.0.0/0'
+      VpcId: !Ref VpcId
+      SubnetId: !Ref SubnetId
 
   MyEC2Instance:
     Type: AWS::EC2::Instance
@@ -45,6 +70,10 @@ Resources:
       InstanceType: t3.micro
       KeyName: my-key-pair # Replace with your key pair
       ImageId: !Ref AmiId
+      SubnetId: !Ref SubnetId
+      SecurityGroupIds:
+        - !Ref SecurityGroupSSH
+        - !Ref SecurityGroupDB
       BlockDeviceMappings:
         - DeviceName: /dev/xvda
           Ebs:

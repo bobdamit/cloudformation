@@ -75,15 +75,13 @@ Resources:
     Properties:
       ImageId: !Ref AmiId
       InstanceType: t3.micro
+      SecurityGroupIds: 
+        - !Ref SecurityGroupSSH
+        - !Ref DBSecurityGroup
       NetworkInterfaces:
         - AssociatePublicIpAddress: false
           DeviceIndex: 0
-          GroupId: !Ref DBSecurityGroup
           SubnetId: subnet-0dbe7f344c3b2181f
-        - AssociatePublicIpAddress: false
-          DeviceIndex: 1
-          GroupId: !Ref SecurityGroupSSH
-          SubnetId: !Ref SubnetId
       BlockDeviceMappings:
         - DeviceName: /dev/xvda
           Ebs:

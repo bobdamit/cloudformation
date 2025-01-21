@@ -73,7 +73,7 @@ Resources:
       SecurityGroupIds: 
         - !Ref SSHSecurityGroup
         - !Ref DBSecurityGroup
-      SourceDestCheck: false,
+      SourceDestCheck: false
       SubnetId: !Ref SubnetId
       ImageId: !Ref AmiId
       InstanceType: t3.micro

@@ -78,10 +78,6 @@ Resources:
       SecurityGroupIds: 
         - !Ref SecurityGroupSSH
         - !Ref DBSecurityGroup
-      NetworkInterfaces:
-        - AssociatePublicIpAddress: false
-          DeviceIndex: 0
-          SubnetId: subnet-0dbe7f344c3b2181f
       BlockDeviceMappings:
         - DeviceName: /dev/xvda
           Ebs:

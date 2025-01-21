@@ -17,7 +17,7 @@ Parameters:
   VolumeId:
     Type: String
     Description: The ID of the persistent EBS volume to attach.
-  MysqlRootPassword:
+  MySQLRootPassword:
     Type: String
     Description: The root password for the MySQL database.
   MongoUser:
@@ -74,7 +74,7 @@ Resources:
           export MYSQL_VOLUME_PATH=/mnt/ebs/mysql_data
           export MONGO_USER=${MongoUser}
           export MONGO_PASSWORD=${MongoPassword}
-          export MYSQL_ROOT_PASSWORD=${MysqlRootPassword}
+          export MYSQL_ROOT_PASSWORD=${MySQLRootPassword}
 
           aws s3 cp s3://${ComposeS3Bucket}/${ComposeS3Key} /home/ec2-user/docker-compose.yaml
           cd /home/ec2-user

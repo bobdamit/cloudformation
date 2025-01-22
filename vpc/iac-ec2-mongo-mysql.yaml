@@ -78,7 +78,8 @@ Resources:
       SourceDestCheck: false
       SubnetId: !Ref SubnetId
       ImageId: !Ref AmiId
-      InstanceType: t3.micro
+      KeyName: docker-db-keypair
+      InstanceType: t2.small
       BlockDeviceMappings:
         - DeviceName: /dev/xvda
           Ebs:

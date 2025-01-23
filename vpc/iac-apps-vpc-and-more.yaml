@@ -19,11 +19,11 @@ Resources:
   VPCEndpointS3:
     Type: AWS::EC2::VPCEndpoint
     Properties:
-      ServiceName: !Join ['', ['com.amazonaws.', !Ref 'AWS::Region', '.s3']]
       VpcId: !Ref VPC
-      VpcEndpointType: Gateway
+      ServiceName: !Sub 'com.amazonaws.${AWS::Region}.s3'
       RouteTableIds:
         - !Ref PrivateRouteTable1
+      VpcEndpointType: Gateway
       Tags:
         - Key: Name
           Value: rs-apps-0-vpce-s3
@@ -37,7 +37,7 @@ Resources:
       MapPublicIpOnLaunch: true
       Tags:
         - Key: Name
-          Value: rs-apps-0-subnet-public1-us-east-1a
+          Value: rs-apps-0-subnet-public
 
   PrivateSubnet1:
     Type: AWS::EC2::Subnet

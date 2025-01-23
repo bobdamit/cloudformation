@@ -32,22 +32,8 @@ Parameters:
 
 Resources:
 
-  SSHSecurityGroup:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      GroupDescription: Allow SSH access
-      SubnetId: !Ref SubnetId
-      VpcId: !Ref VpcId
-      SecurityGroupIngress:
-        - IpProtocol: tcp
-          FromPort: 22
-          ToPort: 22
-          CidrIp: 10.0.0.0/20
-      Tags:
-        - Key: Name
-          Value: sg-ssh
 
-  DBSecurityGroup:
+  EC2SecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupDescription: Allow DB access
@@ -55,8 +41,8 @@ Resources:
       VpcId: !Ref VpcId
       SecurityGroupIngress:
         - IpProtocol: tcp
-          FromPort: 3306
-          ToPort: 3306
+          FromPort: 3307
+          ToPort: 3307
           CidrIp: 10.0.0.0/20
           Description: Mysql
         - IpProtocol: tcp
@@ -64,27 +50,58 @@ Resources:
           ToPort: 27017
           CidrIp: 10.0.0.0/20
           Description: Mongo
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 10.0.0.0/20          
       Tags:
         - Value: Name
-          Key: db-sg
+          Key: docker-mysql-mongo-sg
+
+  EC2InstanceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ec2.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: S3AccessPolicy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action: 
+                  - s3:*
+                Resource: 
+                  - !Sub "arn:aws:s3:::${ComposeS3Bucket}/*"
+  
+  InstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Roles:
+        - !Ref EC2InstanceRole
 
   EC2Instance:
     Type: AWS::EC2::Instance
     Properties:
       AvailabilityZone: us-east-1a
       SecurityGroupIds: 
-        - !GetAtt DBSecurityGroup.GroupId
-        - !GetAtt SSHSecurityGroup.GroupId
+        - !GetAtt EC2SecurityGroup.GroupId
       SourceDestCheck: false
       SubnetId: !Ref SubnetId
       ImageId: !Ref AmiId
       KeyName: docker-db-keypair
       InstanceType: t2.small
+      IamInstanceProfile: !Ref InstanceProfile
       BlockDeviceMappings:
         - DeviceName: /dev/xvda
           Ebs:
             DeleteOnTermination: true
-            VolumeSize: 8
+            VolumeSize: 20
       Volumes:
         - VolumeId: !Ref VolumeId
           Device: /dev/xvdf
@@ -95,6 +112,8 @@ Resources:
       UserData:
         Fn::Base64: !Sub |
           #!/bin/bash
+          set -ex
+          
           yum update -y
 
           # Mount the EBS volume without formatting
@@ -116,5 +135,5 @@ Resources:
 
           aws s3 cp s3://${ComposeS3Bucket}/${ComposeS3Key} /home/ec2-user/docker-compose.yaml
           cd /home/ec2-user
-          docker compose up -d
+          sudo -u docker compose up -d
 

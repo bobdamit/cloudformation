@@ -37,7 +37,6 @@ Resources:
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupDescription: Allow DB access
-      SubnetId: !Ref SubnetId
       VpcId: !Ref VpcId
       SecurityGroupIngress:
         - IpProtocol: tcp

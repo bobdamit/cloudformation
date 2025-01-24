@@ -77,7 +77,7 @@ Resources:
                 Action: 
                   - s3:*
                 Resource: 
-                  - !Sub "arn:aws:s3:::${ComposeS3Bucket}/*"
+                  - !Sub "*"
   
   InstanceProfile:
     Type: AWS::IAM::InstanceProfile

@@ -63,6 +63,7 @@ Resources:
       VpcId: !Ref VPC
       InternetGatewayId: !Ref InternetGateway
 
+  #Public Route Table
   PublicRouteTable:
     Type: AWS::EC2::RouteTable
     Properties:
@@ -71,6 +72,7 @@ Resources:
         - Key: Name
           Value: rs-apps-0-rtb-public
 
+  #
   PublicRoute:
     Type: AWS::EC2::Route
     DependsOn: InternetGatewayAttachment
@@ -79,12 +81,15 @@ Resources:
       DestinationCidrBlock: 0.0.0.0/0
       GatewayId: !Ref InternetGateway
 
+
+  #add association to public subnet
   PublicSubnetRouteTableAssociation:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
       SubnetId: !Ref PublicSubnet1
       RouteTableId: !Ref PublicRouteTable
 
+  #Private Route Table
   PrivateRouteTable1:
     Type: AWS::EC2::RouteTable
     Properties:
@@ -92,6 +97,13 @@ Resources:
       Tags:
         - Key: Name
           Value: rs-apps-0-rtb-private1-us-east-1a
+  
+  #add association to private subnet
+  PrivateSubnetRouteTableAssociation1:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PrivateSubnet1
+      RouteTableId: !Ref PrivateRouteTable1
 
 Outputs:
 

@@ -64,6 +64,13 @@ Resources:
           MountPoints:
             - SourceVolume: mongo-data
               ContainerPath: /data/db
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-group: /ecs/MongoMySqlTask
+              awslogs-region: !Ref "AWS::Region"
+              awslogs-stream-prefix: ecsmongo
+
         - Name: mysql
           Image: mysql:latest
           PortMappings:
@@ -74,13 +81,19 @@ Resources:
           MountPoints:
             - SourceVolume: mysql-data
               ContainerPath: /var/lib/mysql
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-group: /ecs/MongoMySqlTask
+              awslogs-region: !Ref "AWS::Region"
+              awslogs-stream-prefix: ecsmysql
       Volumes:
         - Name: mongo-data
-          efsVolumeConfiguration:
+          EFSVolumeConfiguration:
             FileSystemId: !Ref MongoEFS
             RootDirectory: "/mongo"
         - Name: mysql-data
-          efsVolumeConfiguration:
+          EFSVolumeConfiguration:
             FileSystemId: !Ref MySqlEFS
             RootDirectory: "/mysql"
       Tags:

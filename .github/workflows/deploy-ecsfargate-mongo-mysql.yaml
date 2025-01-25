@@ -51,15 +51,6 @@ jobs:
           echo "Resolved Private Subnet ID: $SUBNET_ID"
           echo "SUBNET_ID=${SUBNET_ID}" >> $GITHUB_ENV
 
-      -  name: Get Volume ID
-         id: volume
-         run: |
-            VOLUME_ID=$(aws ec2 describe-volumes \
-              --filters "Name=tag:Name,Values=rs-db-vol-0" \
-              --query "Volumes[0].VolumeId" \
-              --output text)
-            echo "Resolved Volume ID: $VOLUME_ID"
-            echo "VOLUME_ID=$VOLUME_ID" >> $GITHUB_ENV
 
       -  name: Deploy CloudFormation stack
          uses: aws-actions/aws-cloudformation-github-deploy@master

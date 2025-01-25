@@ -9,7 +9,7 @@ on:
 
 env:
   AWS_REGION: us-east-1
-  STACK_NAME: iac-mongo-mysql-efs-on-ecsfargateec2-mongo-mysql
+  STACK_NAME: iac-mongo-mysql-efs-on-ecsfargate
   TEMPLATE_FILE: vpc/iac-mongo-mysql-efs-on-ecsfargate.yaml
   AMI_ID: ami-0ec0e22a9d68ce829
   MONGODB_USER: userofthemongo

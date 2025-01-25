@@ -76,11 +76,11 @@ Resources:
               ContainerPath: /var/lib/mysql
       Volumes:
         - Name: mongo-data
-          EfsVolumeConfiguration:
+          efsVolumeConfiguration:
             FileSystemId: !Ref MongoEFS
             RootDirectory: "/mongo"
         - Name: mysql-data
-          EfsVolumeConfiguration:
+          efsVolumeConfiguration:
             FileSystemId: !Ref MySqlEFS
             RootDirectory: "/mysql"
       Tags:

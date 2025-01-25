@@ -105,11 +105,11 @@ Resources:
       Volumes:
         - Name: mongo-data
           EFSVolumeConfiguration:
-            FileSystemId: !Ref MongoEFS
+            FilesystemId: !Ref MongoEFS
             RootDirectory: "/mongo"
         - Name: mysql-data
           EFSVolumeConfiguration:
-            FileSystemId: !Ref MySqlEFS
+            FilesystemId: !Ref MySqlEFS
             RootDirectory: "/mysql"
       Tags:
         - Key: Name

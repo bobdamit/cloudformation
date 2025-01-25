@@ -1,4 +1,4 @@
-name: Deploy Mongo/MySQL EC2 Instance CF Stack
+name: Deploy Mongo/MySQL On ECS/Fargate CF Stack
 
 on:
   push:

@@ -70,7 +70,7 @@ jobs:
              VpcId=${{ env.VPC_ID }},
              PrivateSubnets=${{ env.SUBNET_ID }},
              MongoRootUsername=${{ env.MONGODB_USER }},
-             MongoPassword=${{ secrets.MONGO_PASSWORD }},
+             MongoRootPassword=${{ secrets.MONGO_PASSWORD }},
              MySqlRootPassword=${{ secrets.MYSQL_ROOT_PASSWORD }}
            capabilities: CAPABILITY_NAMED_IAM
            no-fail-on-empty-changeset: "1"

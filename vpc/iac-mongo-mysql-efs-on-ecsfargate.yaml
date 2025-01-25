@@ -29,17 +29,13 @@ Resources:
     Type: AWS::EFS::FileSystem
     Properties:
       Encrypted: true
-      Tags:
-        - Key: Name
-          Value: MongoEFS
+
 
   MySqlEFS:
     Type: AWS::EFS::FileSystem
     Properties:
       Encrypted: true
-      Tags:
-        - Key: Name
-          Value: MySqlEFS
+
 
   # ECS Cluster
   ECSCluster:

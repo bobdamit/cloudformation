@@ -1,16 +1,16 @@
 name: Deploy Mongo/MySQL EC2 Instance CF Stack
 
 on:
-#  push:
-#    branches: [main]
-#    paths:
-#      - "vpc/iac-ec2-mongo-mysql.yaml"
+  push:
+    branches: [main]
+    paths:
+      - "vpc/iac-mongo-mysql-efs-on-ecsfargate.yaml"
   workflow_dispatch:
 
 env:
   AWS_REGION: us-east-1
-  STACK_NAME: iac-ec2-mongo-mysql
-  TEMPLATE_FILE: vpc/iac-ec2-mongo-mysql.yaml
+  STACK_NAME: iac-mongo-mysql-efs-on-ecsfargateec2-mongo-mysql
+  TEMPLATE_FILE: vpc/iac-mongo-mysql-efs-on-ecsfargate.yaml
   AMI_ID: ami-0ec0e22a9d68ce829
   MONGODB_USER: userofthemongo
   VPC_NAME: rs-apps-0-vpc
@@ -67,14 +67,10 @@ jobs:
            name: ${{ env.STACK_NAME }}
            template: ${{ env.TEMPLATE_FILE }}
            parameter-overrides: >-
-             AmiId=${{ env.AMI_ID }},
              VpcId=${{ env.VPC_ID }},
-             SubnetId=${{ env.SUBNET_ID }},
-             VolumeId=${{ env.VOLUME_ID }},
-             ComposeS3Bucket=${{ env.DEPLOY_BUCKET }},
-             ComposeS3Key=docker/mongo-mysql-compose.yaml,
-             MongoUser=${{ env.MONGODB_USER }},
+             PrivateSubnets=${{ env.SUBNET_ID }},
+             MongoRootUsername=${{ env.MONGODB_USER }},
              MongoPassword=${{ secrets.MONGO_PASSWORD }},
-             MySQLRootPassword=${{ secrets.MYSQL_ROOT_PASSWORD }}
+             MySqlRootPassword=${{ secrets.MYSQL_ROOT_PASSWORD }}
            capabilities: CAPABILITY_NAMED_IAM
            no-fail-on-empty-changeset: "1"

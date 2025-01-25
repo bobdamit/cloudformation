@@ -1,0 +1,133 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Parameters:
+  VpcId:
+    Description: The ID of the VPC where the ECS cluster and tasks will be deployed.
+    Type: String
+
+  PrivateSubnets:
+    Description: Comma-separated list of private subnet IDs for the ECS tasks.
+    Type: CommaDelimitedList
+
+  MongoRootUsername:
+    Description: MongoDB root username.
+    Type: String
+    NoEcho: true
+
+  MongoRootPassword:
+    Description: MongoDB root password.
+    Type: String
+    NoEcho: true
+
+  MySqlRootPassword:
+    Description: MySQL root password.
+    Type: String
+    NoEcho: true
+
+Resources:
+  # EFS File System for MongoDB and MySQL
+  MongoEFS:
+    Type: AWS::EFS::FileSystem
+    Properties:
+      Encrypted: true
+      Tags:
+        - Key: Name
+          Value: MongoEFS
+
+  MySqlEFS:
+    Type: AWS::EFS::FileSystem
+    Properties:
+      Encrypted: true
+      Tags:
+        - Key: Name
+          Value: MySqlEFS
+
+  # ECS Cluster
+  ECSCluster:
+    Type: AWS::ECS::Cluster
+
+  # Task Definition
+  MongoMySqlTaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      Family: MongoMySqlTask
+      NetworkMode: awsvpc
+      RequiresCompatibilities:
+        - FARGATE
+      Cpu: "512"
+      Memory: "1024"
+      ContainerDefinitions:
+        - Name: mongodb
+          Image: mongo:latest
+          PortMappings:
+            - ContainerPort: 27017
+          Environment:
+            - Name: MONGO_INITDB_ROOT_USERNAME
+              Value: !Ref MongoRootUsername
+            - Name: MONGO_INITDB_ROOT_PASSWORD
+              Value: !Ref MongoRootPassword
+          MountPoints:
+            - SourceVolume: mongo-data
+              ContainerPath: /data/db
+        - Name: mysql
+          Image: mysql:latest
+          PortMappings:
+            - ContainerPort: 3306
+          Environment:
+            - Name: MYSQL_ROOT_PASSWORD
+              Value: !Ref MySqlRootPassword
+          MountPoints:
+            - SourceVolume: mysql-data
+              ContainerPath: /var/lib/mysql
+      Volumes:
+        - Name: mongo-data
+          EfsVolumeConfiguration:
+            FileSystemId: !Ref MongoEFS
+            RootDirectory: "/mongo"
+        - Name: mysql-data
+          EfsVolumeConfiguration:
+            FileSystemId: !Ref MySqlEFS
+            RootDirectory: "/mysql"
+      Tags:
+        - Key: Name
+          Value: MongoMySqlTask
+
+  # ECS Service
+  MongoMySqlService:
+    Type: AWS::ECS::Service
+    Properties:
+      Cluster: !Ref ECSCluster
+      TaskDefinition: !Ref MongoMySqlTaskDefinition
+      LaunchType: FARGATE
+      DesiredCount: 1
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          Subnets: !Ref PrivateSubnets
+          SecurityGroups:
+            - !Ref TaskSecurityGroup
+
+  # Security Group for ECS Tasks
+  TaskSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Allow access to MongoDB and MySQL
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 27017
+          ToPort: 27017
+          CidrIp: 10.0.0.0/16 # Adjust for your CIDR block
+        - IpProtocol: tcp
+          FromPort: 3306
+          ToPort: 3306
+          CidrIp: 10.0.0.0/16
+      Tags:
+        - Key: Name
+          Value: TaskSecurityGroup
+
+Outputs:
+  ClusterName:
+    Value: !Ref ECSCluster
+  MongoEFSId:
+    Value: !Ref MongoEFS
+  MySqlEFSId:
+    Value: !Ref MySqlEFS

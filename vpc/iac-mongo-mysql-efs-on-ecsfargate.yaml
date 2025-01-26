@@ -52,12 +52,10 @@ Resources:
       Tags:
         - Key: Name
           Value: LogGroupMongo
-
+          
   # ECS Cluster
   ECSCluster:
-    Type: AWS::ECS::ClusterAWSTemplateFormatVersion: '2010-09-09'
-
-
+    Type: AWS::ECS::Cluster
 
   ECSTaskExecutionRole:
     Type: AWS::IAM::Role
@@ -72,19 +70,19 @@ Resources:
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy
         - arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly
-        - arn:aws:iam::aws:policy/CloudWatchLogsFullAccess
 
   # Task Definition
   MongoMySqlTaskDefinition:
-    Type: AWS::ECS::TaskDefinition
+ 
+        - arn:aws:iam::aws:policy/CloudWatchLogsFullAccess   Type: AWS::ECS::TaskDefinition
     Properties:
       Family: MongoMySqlTask
       NetworkMode: awsvpc
       RequiresCompatibilities:
         - FARGATE
-      Cpu: 512
-      Memory: 2048
-      ExecutionRoleArn: !GetAtt ECSTaskExecutionRole.Arn
+      Cpu: '512'
+      Memory: '2048'
+      ExecutionRoleArn: Gettt ECSTaskExecuionRle.Arn
       ContainerDefinitions:
         - Name: mongodb
           Image: !Sub ${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/mongodb:latest
@@ -101,8 +99,8 @@ Resources:
           LogConfiguration:
             LogDriver: awslogs
             Options:
-              awslogs-group: /ecs/MongoTask
-              awslogs-region: !Ref AWS::Region
+              awslogs-group: /ecs/MongoMySqlTask
+              awslogs-region: !Ref AWS::R
               awslogs-stream-prefix: ecsmongo
         - Name: mysql
           Image: !Sub ${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/mysql:latest
@@ -117,8 +115,8 @@ Resources:
           LogConfiguration:
             LogDriver: awslogs
             Options:
-              awslogs-group: /ecs/MySqlTask
-              awslogs-region: !Ref AWS::Region
+              awslogs-group: /ecs/MongoMySqlTask
+              awslogs-region: !Ref Aegion
               awslogs-stream-prefix: ecsmysql
       Volumes:
         - Name: mongo-data
@@ -171,6 +169,21 @@ Resources:
 
 Outputs:
   ClusterName:
+    Value: !Ref ECSCluster
+  MongoEFSId:
+    Value: !Ref MongoEFS
+  MySqlEFSId:
+    Value: !Ref MySqlEFSme
+          Value: TaskSecurityGroup
+
+Outputs:
+  ClusterName:
+    Value: !Ref ECSCluster
+  MongoEFSId:
+    Value: !Ref MongoEFS
+  MySqlEFSId:
+    Value: !Ref MySqlEFS
+sterName:
     Value: !Ref ECSCluster
   MongoEFSId:
     Value: !Ref MongoEFS

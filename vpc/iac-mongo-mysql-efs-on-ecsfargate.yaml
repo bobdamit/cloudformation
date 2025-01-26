@@ -99,7 +99,7 @@ Resources:
           LogConfiguration:
             LogDriver: awslogs
             Options:
-              awslogs-group: /ecs/MongoMySqlTask
+              awslogs-group: /ecs/MongoTask
               awslogs-region: !Ref AWS::Region
               awslogs-stream-prefix: ecsmongo
         - Name: mysql
@@ -115,7 +115,7 @@ Resources:
           LogConfiguration:
             LogDriver: awslogs
             Options:
-              awslogs-group: /ecs/MongoMySqlTask
+              awslogs-group: /ecs/MySqlTask
               awslogs-region: !Ref AWS::Region
               awslogs-stream-prefix: ecsmysql
       Volumes:

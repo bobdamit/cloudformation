@@ -42,6 +42,9 @@ Resources:
         - !Ref PrivateSubnet1
       SecurityGroupIds:
         - !Ref VPCEndpointSecurityGroup
+      Tags:
+        - Key: Name
+          Value: rs-apps-0-vpce-ecr-dkr
 
   # VPC Endpoints for ECR API
   ECRAPIEndpoint:
@@ -55,6 +58,9 @@ Resources:
           - !Ref PrivateSubnet1
         SecurityGroupIds: 
           - !Ref VPCEndpointSecurityGroup
+        Tags:
+          - Key: Name
+            Value: rs-apps-0-vpce-ecr-api
 
   #Security Group for VPC Endpoints
   VPCEndpointSecurityGroup:

@@ -52,7 +52,7 @@ Resources:
       Tags:
         - Key: Name
           Value: LogGroupMongo
-          
+
   # ECS Cluster
   ECSCluster:
     Type: AWS::ECS::Cluster
@@ -70,11 +70,11 @@ Resources:
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy
         - arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly
+        - arn:aws:iam::aws:policy/CloudWatchLogsFullAccess
 
   # Task Definition
   MongoMySqlTaskDefinition:
- 
-        - arn:aws:iam::aws:policy/CloudWatchLogsFullAccess   Type: AWS::ECS::TaskDefinition
+    Type: AWS::ECS::TaskDefinition
     Properties:
       Family: MongoMySqlTask
       NetworkMode: awsvpc

@@ -55,7 +55,9 @@ Resources:
 
   # ECS Cluster
   ECSCluster:
-    Type: AWS::ECS::Cluster
+    Type: AWS::ECS::ClusterAWSTemplateFormatVersion: '2010-09-09'
+
+
 
   ECSTaskExecutionRole:
     Type: AWS::IAM::Role

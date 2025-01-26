@@ -62,6 +62,18 @@ Resources:
           - Key: Name
             Value: rs-apps-0-vpce-ecr-api
 
+  # VPC Endpoint for CloudWatch Logs
+  CloudWatchLogsVPCEndpoint:
+    Type: AWS::EC2::VPCEndpoint
+    Properties:
+      ServiceName: !Sub "com.amazonaws.${AWS::Region}.logs" 
+      VpcId: !Ref VPC
+      VpcEndpointType: Interface
+        - !Ref PrivateSubnet1
+      SecurityGroupIds: 
+        - !Ref VPCEndpointSecurityGroup
+
+
   #Security Group for VPC Endpoints
   VPCEndpointSecurityGroup:
       Type: AWS::EC2::SecurityGroup
@@ -73,6 +85,7 @@ Resources:
             FromPort: 443
             ToPort: 443
             CidrIp: 10.0.0.0/16
+
 
 
   # a public subnet with 4096 addresses

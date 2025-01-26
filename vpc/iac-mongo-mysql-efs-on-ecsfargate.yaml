@@ -53,16 +53,6 @@ Resources:
         - arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy
         - arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly
 
-  MongoRepository:
-    Type: AWS::ECR::Repository
-    Properties:
-      RepositoryName: mongodb
-
-  MySQLRepository:
-    Type: AWS::ECR::Repository
-    Properties:
-      RepositoryName: mysql
-
   # Task Definition
   MongoMySqlTaskDefinition:
     Type: AWS::ECS::TaskDefinition

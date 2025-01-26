@@ -38,7 +38,8 @@ Resources:
       ServiceName: !Sub com.amazonaws.${AWS::Region}.ecr.dkr
       VpcEndpointType: Interface
       PrivateDnsEnabled: true
-      SubnetIds: !Ref PrivateSubnet1
+      SubnetIds: 
+        - !Ref PrivateSubnet1
       SecurityGroupIds:
         - !Ref VPCEndpointSecurityGroup
 
@@ -50,7 +51,8 @@ Resources:
         ServiceName: !Sub com.amazonaws.${AWS::Region}.ecr.api
         VpcEndpointType: Interface
         PrivateDnsEnabled: true
-        SubnetIds: !Ref PrivateSubnet1
+        SubnetIds: 
+          - !Ref PrivateSubnet1
         SecurityGroupIds: 
           - !Ref VPCEndpointSecurityGroup
 

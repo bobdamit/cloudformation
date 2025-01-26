@@ -38,7 +38,7 @@ Resources:
   LogGroupMysql:
     Type: AWS::Logs::LogGroup
     Properties:
-      LogGroupName: /ecs/MongoMySqlTask
+      LogGroupName: /ecs/MySqlTask
       RetentionInDays: 14
       Tags:
         - Key: Name
@@ -47,7 +47,7 @@ Resources:
   LogGroupMongo:
     Type: AWS::Logs::LogGroup
     Properties:
-      LogGroupName: /ecs/MongoMySqlTask
+      LogGroupName: /ecs/MongoTask
       RetentionInDays: 14
       Tags:
         - Key: Name

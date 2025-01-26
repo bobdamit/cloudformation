@@ -39,7 +39,7 @@ Resources:
       VpcEndpointType: Interface
       PrivateDnsEnabled: true
       SubnetIds: 
-        - !Ref PrivateSubnet1
+        - !Ref PrivateSubnet
       SecurityGroupIds:
         - !Ref VPCEndpointSecurityGroup
       Tags:
@@ -69,7 +69,7 @@ Resources:
       ServiceName: !Sub "com.amazonaws.${AWS::Region}.logs" 
       VpcId: !Ref VPC
       VpcEndpointType: Interface
-        - !Ref PrivateSubnet1
+        - !Ref PrivateSubnet
       SecurityGroupIds: 
         - !Ref VPCEndpointSecurityGroup
 
@@ -101,7 +101,7 @@ Resources:
           Value: rs-apps-0-subnet-public
 
   # a private subnet with 4096 addresses
-  PrivateSubnet1:
+  PrivateSubnet:
     Type: AWS::EC2::Subnet
     Properties:
       VpcId: !Ref VPC
@@ -166,7 +166,7 @@ Resources:
   PrivateSubnetRouteTableAssociation1:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
-      SubnetId: !Ref PrivateSubnet1
+      SubnetId: !Ref PrivateSubnet
       RouteTableId: !Ref PrivateRouteTable1
 
 Outputs:
@@ -183,11 +183,11 @@ Outputs:
     Export:
       Name: !Sub '${AWS::StackName}-PublicSubnet1'
 
-  PrivateSubnet1:
+  PrivateSubnet:
     Description: A reference to the private subnet in the 1st Availability Zone
-    Value: !Ref PrivateSubnet1
+    Value: !Ref PrivateSubnet
     Export:
-      Name: !Sub '${AWS::StackName}-PrivateSubnet1'
+      Name: !Sub '${AWS::StackName}-PrivateSubnet'
 
   VPCEndpointS3:
     Description: A reference to the VPC Endpoint for S3

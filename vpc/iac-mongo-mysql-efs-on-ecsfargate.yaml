@@ -28,11 +28,13 @@ Resources:
   MongoEFS:
     Type: AWS::EFS::FileSystem
     Properties:
+      AvailabilityZoneName: 'us-east-1a'
       Encrypted: true
 
   MySqlEFS:
     Type: AWS::EFS::FileSystem
     Properties:
+      AvailabilityZoneName: 'us-east-1a'
       Encrypted: true
 
   LogGroupMysql:

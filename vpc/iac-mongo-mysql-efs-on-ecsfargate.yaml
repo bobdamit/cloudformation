@@ -52,7 +52,7 @@ Resources:
       Tags:
         - Key: Name
           Value: LogGroupMongo
-          
+
   # ECS Cluster
   ECSCluster:
     Type: AWS::ECS::Cluster
@@ -79,8 +79,8 @@ Resources:
       NetworkMode: awsvpc
       RequiresCompatibilities:
         - FARGATE
-      Cpu: "512"
-      Memory: "2048"
+      Cpu: '512'
+      Memory: '2048'
       ExecutionRoleArn: !GetAtt ECSTaskExecutionRole.Arn
       ContainerDefinitions:
         - Name: mongodb
@@ -99,7 +99,7 @@ Resources:
             LogDriver: awslogs
             Options:
               awslogs-group: /ecs/MongoMySqlTask
-              awslogs-region: !Ref "AWS::Region"
+              awslogs-region: !Ref AWS::Region
               awslogs-stream-prefix: ecsmongo
         - Name: mysql
           Image: !Sub ${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/mysql:latest
@@ -115,17 +115,17 @@ Resources:
             LogDriver: awslogs
             Options:
               awslogs-group: /ecs/MongoMySqlTask
-              awslogs-region: !Ref "AWS::Region"
+              awslogs-region: !Ref AWS::Region
               awslogs-stream-prefix: ecsmysql
       Volumes:
         - Name: mongo-data
           EFSVolumeConfiguration:
             FilesystemId: !Ref MongoEFS
-            RootDirectory: "/mongo"
+            RootDirectory: /mongo
         - Name: mysql-data
           EFSVolumeConfiguration:
             FilesystemId: !Ref MySqlEFS
-            RootDirectory: "/mysql"
+            RootDirectory: /mysql
       Tags:
         - Key: Name
           Value: MongoMySqlTask
@@ -146,7 +146,6 @@ Resources:
       Tags:
         - Key: Name
           Value: MongoMysqlService
-
 
   # Security Group for ECS Tasks
   TaskSecurityGroup:

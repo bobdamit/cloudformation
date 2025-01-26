@@ -35,6 +35,24 @@ Resources:
     Properties:
       Encrypted: true
 
+  LogGroupMysql:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: /ecs/MongoMySqlTask
+      RetentionInDays: 14
+      Tags:
+        - Key: Name
+          Value: LogGroupMysql
+
+  LogGroupMongo:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: /ecs/MongoMySqlTask
+      RetentionInDays: 14
+      Tags:
+        - Key: Name
+          Value: LogGroupMongo
+          
   # ECS Cluster
   ECSCluster:
     Type: AWS::ECS::Cluster

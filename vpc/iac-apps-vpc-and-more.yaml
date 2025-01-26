@@ -34,7 +34,7 @@ Resources:
   ECRDockerEndpoint:
     Type: AWS::EC2::VPCEndpoint
     Properties:
-      VpcId: !Ref VpcId
+      VpcId: !Ref VPC
       ServiceName: !Sub com.amazonaws.${AWS::Region}.ecr.dkr
       VpcEndpointType: Interface
       PrivateDnsEnabled: true
@@ -46,7 +46,7 @@ Resources:
   ECRAPIEndpoint:
       Type: AWS::EC2::VPCEndpoint
       Properties:
-        VpcId: !Ref VpcId
+        VpcId: !Ref VPC
         ServiceName: !Sub com.amazonaws.${AWS::Region}.ecr.api
         VpcEndpointType: Interface
         PrivateDnsEnabled: true
@@ -59,7 +59,7 @@ Resources:
       Type: AWS::EC2::SecurityGroup
       Properties:
         GroupDescription: Security group for VPC Endpoints
-        VpcId: !Ref VpcId
+        VpcId: !Ref VPC
         SecurityGroupIngress:
           - IpProtocol: tcp
             FromPort: 443

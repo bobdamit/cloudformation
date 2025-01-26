@@ -82,7 +82,7 @@ Resources:
         - FARGATE
       Cpu: 512
       Memory: 2048
-      ExecutionRoleArn: Gettt ECSTaskExecuionRle.Arn
+      ExecutionRoleArn: !GetAtt ECSTaskExecutionRole.Arn
       ContainerDefinitions:
         - Name: mongodb
           Image: !Sub ${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/mongodb:latest

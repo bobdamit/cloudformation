@@ -55,7 +55,7 @@ Resources:
         VpcEndpointType: Interface
         PrivateDnsEnabled: true
         SubnetIds: 
-          - !Ref PrivateSubnet1
+          - !Ref PrivateSubnet
         SecurityGroupIds: 
           - !Ref VPCEndpointSecurityGroup
         Tags:

@@ -73,6 +73,10 @@ Resources:
         - !Ref PrivateSubnet
       SecurityGroupIds: 
         - !Ref VPCEndpointSecurityGroup
+      Tags:
+        - Key: Name
+          Value: rs-apps-0-vpce-logs
+
 
 
   #Security Group for VPC Endpoints

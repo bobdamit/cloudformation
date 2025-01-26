@@ -166,26 +166,3 @@ Resources:
       Tags:
         - Key: Name
           Value: TaskSecurityGroup
-
-Outputs:
-  ClusterName:
-    Value: !Ref ECSCluster
-  MongoEFSId:
-    Value: !Ref MongoEFS
-  MySqlEFSId:
-    Value: !Ref MySqlEFSme
-          Value: TaskSecurityGroup
-
-Outputs:
-  ClusterName:
-    Value: !Ref ECSCluster
-  MongoEFSId:
-    Value: !Ref MongoEFS
-  MySqlEFSId:
-    Value: !Ref MySqlEFS
-sterName:
-    Value: !Ref ECSCluster
-  MongoEFSId:
-    Value: !Ref MongoEFS
-  MySqlEFSId:
-    Value: !Ref MySqlEFS

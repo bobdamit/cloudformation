@@ -39,7 +39,7 @@ Resources:
     Type: AWS::Logs::LogGroup
     Properties:
       LogGroupName: /ecs/MySqlTask
-      RetentionInDays: 14
+      RetentionInDays: 7
       Tags:
         - Key: Name
           Value: LogGroupMysql
@@ -48,7 +48,7 @@ Resources:
     Type: AWS::Logs::LogGroup
     Properties:
       LogGroupName: /ecs/MongoTask
-      RetentionInDays: 14
+      RetentionInDays: 7
       Tags:
         - Key: Name
           Value: LogGroupMongo
@@ -70,6 +70,7 @@ Resources:
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy
         - arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly
+        - arn:aws:iam::aws:policy/CloudWatchLogsFullAccess
 
   # Task Definition
   MongoMySqlTaskDefinition:

@@ -80,8 +80,8 @@ Resources:
       NetworkMode: awsvpc
       RequiresCompatibilities:
         - FARGATE
-      Cpu: '512'
-      Memory: '2048'
+      Cpu: 512
+      Memory: 2048
       ExecutionRoleArn: Gettt ECSTaskExecuionRle.Arn
       ContainerDefinitions:
         - Name: mongodb

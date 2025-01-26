@@ -30,6 +30,43 @@ Resources:
         - Key: Name
           Value: rs-apps-0-vpce-s3
 
+  #VPCE interface endpoint for ECR containers
+  ECRDockerEndpoint:
+    Type: AWS::EC2::VPCEndpoint
+    Properties:
+      VpcId: !Ref VpcId
+      ServiceName: !Sub com.amazonaws.${AWS::Region}.ecr.dkr
+      VpcEndpointType: Interface
+      PrivateDnsEnabled: true
+      SubnetIds: !Ref PrivateSubnet1
+      SecurityGroupIds:
+        - !Ref VPCEndpointSecurityGroup
+
+  # VPC Endpoints for ECR API
+  ECRAPIEndpoint:
+      Type: AWS::EC2::VPCEndpoint
+      Properties:
+        VpcId: !Ref VpcId
+        ServiceName: !Sub com.amazonaws.${AWS::Region}.ecr.api
+        VpcEndpointType: Interface
+        PrivateDnsEnabled: true
+        SubnetIds: !Ref PrivateSubnet1
+        SecurityGroupIds: 
+          - !Ref VPCEndpointSecurityGroup
+
+  #Security Group for VPC Endpoints
+  VPCEndpointSecurityGroup:
+      Type: AWS::EC2::SecurityGroup
+      Properties:
+        GroupDescription: Security group for VPC Endpoints
+        VpcId: !Ref VpcId
+        SecurityGroupIngress:
+          - IpProtocol: tcp
+            FromPort: 443
+            ToPort: 443
+            CidrIp: 10.0.0.0/16
+
+
   # a public subnet with 4096 addresses
   PublicSubnet1:
     Type: AWS::EC2::Subnet

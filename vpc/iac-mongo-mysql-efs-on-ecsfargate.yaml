@@ -30,12 +30,10 @@ Resources:
     Properties:
       Encrypted: true
 
-
   MySqlEFS:
     Type: AWS::EFS::FileSystem
     Properties:
       Encrypted: true
-
 
   # ECS Cluster
   ECSCluster:
@@ -53,7 +51,17 @@ Resources:
             Action: sts:AssumeRole
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy
+        - arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly
 
+  MongoRepository:
+    Type: AWS::ECR::Repository
+    Properties:
+      RepositoryName: mongodb
+
+  MySQLRepository:
+    Type: AWS::ECR::Repository
+    Properties:
+      RepositoryName: mysql
 
   # Task Definition
   MongoMySqlTaskDefinition:
@@ -64,11 +72,11 @@ Resources:
       RequiresCompatibilities:
         - FARGATE
       Cpu: "512"
-      Memory: "1024"
+      Memory: "2048"
       ExecutionRoleArn: !GetAtt ECSTaskExecutionRole.Arn
       ContainerDefinitions:
         - Name: mongodb
-          Image: mongo:latest
+          Image: !Sub ${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/mongodb:latest
           PortMappings:
             - ContainerPort: 27017
           Environment:
@@ -85,9 +93,8 @@ Resources:
               awslogs-group: /ecs/MongoMySqlTask
               awslogs-region: !Ref "AWS::Region"
               awslogs-stream-prefix: ecsmongo
-
         - Name: mysql
-          Image: mysql:latest
+          Image: !Sub ${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/mysql:latest
           PortMappings:
             - ContainerPort: 3306
           Environment:
@@ -128,6 +135,10 @@ Resources:
           Subnets: !Ref PrivateSubnets
           SecurityGroups:
             - !Ref TaskSecurityGroup
+      Tags:
+        - Key: Name
+          Value: MongoMysqlService
+
 
   # Security Group for ECS Tasks
   TaskSecurityGroup:
@@ -139,11 +150,11 @@ Resources:
         - IpProtocol: tcp
           FromPort: 27017
           ToPort: 27017
-          CidrIp: 10.0.0.0/16 # Adjust for your CIDR block
+          CidrIp: 10.0.0.0/20
         - IpProtocol: tcp
           FromPort: 3306
           ToPort: 3306
-          CidrIp: 10.0.0.0/16
+          CidrIp: 10.0.0.0/20
       Tags:
         - Key: Name
           Value: TaskSecurityGroup

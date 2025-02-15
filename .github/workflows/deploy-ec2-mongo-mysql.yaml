@@ -11,7 +11,6 @@ env:
   AWS_REGION: us-east-1
   STACK_NAME: iac-mongo-mysql-efs-on-ecsfargate
   TEMPLATE_FILE: vpc/iac-mongo-mysql-efs-on-ecsfargate.yaml
-  AMI_ID: ami-0ec0e22a9d68ce829
   MONGODB_USER: userofthemongo
   VPC_NAME: rs-apps-0-vpc
   PRIVATE_SUBNET_NAME: rs-apps-0-subnet-private1-us-east-1a
@@ -67,7 +66,6 @@ jobs:
            name: ${{ env.STACK_NAME }}
            template: ${{ env.TEMPLATE_FILE }}
            parameter-overrides: >-
-             AmiId=${{ env.AMI_ID }},
              VpcId=${{ env.VPC_ID }},
              PrivateSubnet=${{ env.SUBNET_ID }},
              MongoUsername=${{ env.MONGODB_USER }},

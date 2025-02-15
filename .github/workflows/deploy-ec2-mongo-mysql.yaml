@@ -14,14 +14,13 @@ env:
   MONGODB_USER: userofthemongo
   VPC_NAME: rs-apps-0-vpc
   PRIVATE_SUBNET_NAME: rs-apps-0-subnet-private1-us-east-1a
-  DEPLOY_BUCKET: rs-deploy-artifacts-0
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -49,16 +48,6 @@ jobs:
             --output text)
           echo "Resolved Private Subnet ID: $SUBNET_ID"
           echo "SUBNET_ID=${SUBNET_ID}" >> $GITHUB_ENV
-
-      -  name: Get Volume ID
-         id: volume
-         run: |
-            VOLUME_ID=$(aws ec2 describe-volumes \
-              --filters "Name=tag:Name,Values=rs-db-vol-0" \
-              --query "Volumes[0].VolumeId" \
-              --output text)
-            echo "Resolved Volume ID: $VOLUME_ID"
-            echo "VOLUME_ID=$VOLUME_ID" >> $GITHUB_ENV
 
       -  name: Deploy CloudFormation stack
          uses: aws-actions/aws-cloudformation-github-deploy@master

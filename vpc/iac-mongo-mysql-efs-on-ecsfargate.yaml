@@ -220,17 +220,6 @@ Resources:
          LogGroupName: /ecs/my-fargate-cluster
          RetentionInDays: 7
 
-   ECREndpoint:
-      Type: AWS::EC2::VPCEndpoint
-      Properties:
-         VpcId: !Ref VpcId
-         ServiceName: !Sub com.amazonaws.${AWS::Region}.ecr.dkr
-         VpcEndpointType: Interface
-         SubnetIds:
-            - !Ref PrivateSubnet
-         SecurityGroupIds:
-            - !Ref ECSSecurityGroup
-         PrivateDnsEnabled: true
 
    MySQLService:
       Type: AWS::ECS::Service

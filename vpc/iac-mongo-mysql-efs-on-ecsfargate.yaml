@@ -35,7 +35,9 @@ Resources:
       Properties:
          PerformanceMode: generalPurpose
          ThroughputMode: bursting
-
+         Tags:
+            - Key: Name
+              Value: rs-apps-0-efs
    EFSAccessPointMySQL:
       Type: AWS::EFS::AccessPoint
       Properties:
@@ -49,7 +51,9 @@ Resources:
                OwnerGid: "1000"
                Permissions: "0755"
             Path: "/mysql"
-
+         Tags:
+            - Key: Name
+				  Value: rs-apps-0-efs-mysql
    EFSAccessPointMongoDB:
       Type: AWS::EFS::AccessPoint
       Properties:
@@ -63,7 +67,9 @@ Resources:
                OwnerGid: "1000"
                Permissions: "0755"
             Path: "/mongodb"
-
+         Tags:	
+            - Key: Name
+              Value: rs-apps-0-efs-mongodb
    EFSMountTarget:
       Type: AWS::EFS::MountTarget
       Properties:
@@ -82,6 +88,11 @@ Resources:
               FromPort: 2049
               ToPort: 2049
               SourceSecurityGroupId: !Ref ECSSecurityGroup
+         SecurityGroupEgress:  # Add this egress rule
+            - IpProtocol: tcp
+              FromPort: 2049
+              ToPort: 2049
+              DestinationSecurityGroupId: !Ref ECSSecurityGroup
          Tags:
             - Key: Name
               Value: rs-apps-0-efs-sg
@@ -100,6 +111,11 @@ Resources:
               FromPort: 27017
               ToPort: 27017
               CidrIp: 0.0.0.0/0
+         SecurityGroupEgress:  # Add this egress rule
+            - IpProtocol: tcp
+              FromPort: 2049
+              ToPort: 2049
+              DestinationSecurityGroupId: !Ref EFSSecurityGroup
          Tags:
             - Key: Name
               Value: rs-apps-0-ecs-sg
@@ -196,6 +212,7 @@ Resources:
             - arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy
             - arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly
             - arn:aws:iam::aws:policy/CloudWatchLogsFullAccess
+            - arn:aws:iam::aws:policy/AmazonElasticFileSystemClientFullAccess 
 
    ECSTaskRole:
       Type: AWS::IAM::Role
@@ -211,6 +228,7 @@ Resources:
             - arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy
             - arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly
             - arn:aws:iam::aws:policy/CloudWatchLogsFullAccess
+            - arn:aws:iam::aws:policy/AmazonElasticFileSystemClientFullAccess 
    CloudWatchLogsGroup:
       Type: AWS::Logs::LogGroup
       Properties:

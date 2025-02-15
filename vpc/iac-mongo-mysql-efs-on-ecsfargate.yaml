@@ -125,12 +125,12 @@ Resources:
               Environment:
                  - Name: MYSQL_ROOT_PASSWORD
                    Value: !Ref MySqlRootPassword
-              LogConfiguration:
-                 LogDriver: awslogs
-                 Options:
-                    awslogs-group: !Ref CloudWatchLogsGroup
-                    awslogs-region: !Ref AWS::Region
-                    awslogs-stream-prefix: mysql
+#              LogConfiguration:
+#                 LogDriver: awslogs
+#                 Options:
+#                    awslogs-group: !Ref CloudWatchLogsGroup
+#                    awslogs-region: !Ref AWS::Region
+#                    awslogs-stream-prefix: mysql
               MountPoints:
                  - SourceVolume: mysql-storage
                    ContainerPath: /var/lib/mysql
@@ -165,12 +165,12 @@ Resources:
                    Value: !Ref MongoUsername
                  - Name: MONGO_INITDB_ROOT_PASSWORD
                    Value: !Ref MongoPassword
-              LogConfiguration:
-                 LogDriver: awslogs
-                 Options:
-                    awslogs-group: !Ref CloudWatchLogsGroup
-                    awslogs-region: !Ref AWS::Region
-                    awslogs-stream-prefix: mongodb
+#              LogConfiguration:
+#                 LogDriver: awslogs
+#                 Options:
+#                    awslogs-group: !Ref CloudWatchLogsGroup
+#                    awslogs-region: !Ref AWS::Region
+#                    awslogs-stream-prefix: mongodb
               MountPoints:
                  - SourceVolume: mongodb-storage
                    ContainerPath: /data/db
@@ -211,7 +211,6 @@ Resources:
             - arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy
             - arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly
             - arn:aws:iam::aws:policy/CloudWatchLogsFullAccess
-
    CloudWatchLogsGroup:
       Type: AWS::Logs::LogGroup
       Properties:

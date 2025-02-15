@@ -95,6 +95,9 @@ Resources:
             FromPort: 443
             ToPort: 443
             CidrIp: 0.0.0.0/0
+        Tags:
+          - Key: Name
+            Value: rs-apps-0-vpce-sg
 
 
 

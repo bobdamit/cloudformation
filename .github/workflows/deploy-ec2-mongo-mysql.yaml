@@ -4,13 +4,13 @@ on:
 #  push:
 #    branches: [main]
 #    paths:
-#      - "vpc/iac-ec2-mongo-mysql.yaml"
+#      - "vpc/iac-mongo-mysql-efs-on-ecsfargate.yaml"
   workflow_dispatch:
 
 env:
   AWS_REGION: us-east-1
-  STACK_NAME: iac-ec2-mongo-mysql
-  TEMPLATE_FILE: vpc/iac-ec2-mongo-mysql.yaml
+  STACK_NAME: iac-mongo-mysql-efs-on-ecsfargate
+  TEMPLATE_FILE: vpc/iac-mongo-mysql-efs-on-ecsfargate.yaml
   AMI_ID: ami-0ec0e22a9d68ce829
   MONGODB_USER: userofthemongo
   VPC_NAME: rs-apps-0-vpc

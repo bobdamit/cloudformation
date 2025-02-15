@@ -16,7 +16,7 @@ env:
   PRIVATE_SUBNET_NAME: rs-apps-0-subnet-private1-us-east-1a
 
 jobs:
-  deploy:
+  deploy-ec2-mongo-mysql:
     runs-on: ubuntu-latest
 
     steps:

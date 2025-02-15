@@ -64,15 +64,7 @@ Resources:
                Permissions: "0755"
             Path: "/mongodb"
 
-   EFSMountTarget1:
-      Type: AWS::EFS::MountTarget
-      Properties:
-         FileSystemId: !Ref EFSFileSystem
-         SubnetId: !Ref PrivateSubnet
-         SecurityGroups:
-            - !Ref EFSSecurityGroup
-
-   EFSMountTarget2:
+   EFSMountTarget:
       Type: AWS::EFS::MountTarget
       Properties:
          FileSystemId: !Ref EFSFileSystem
@@ -90,6 +82,9 @@ Resources:
               FromPort: 2049
               ToPort: 2049
               SourceSecurityGroupId: !Ref ECSSecurityGroup
+			Tags:
+				- Key: Name
+				  Value: rs-apps-0-efs-sg
 
    ECSSecurityGroup:
       Type: AWS::EC2::SecurityGroup
@@ -105,6 +100,9 @@ Resources:
               FromPort: 27017
               ToPort: 27017
               CidrIp: 0.0.0.0/0
+			Tags:
+				- Key: Name
+				  Value: rs-apps-0-ecs-sg
 
    MySQLTaskDefinition:
       Type: AWS::ECS::TaskDefinition

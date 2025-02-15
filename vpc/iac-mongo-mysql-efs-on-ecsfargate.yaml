@@ -53,7 +53,7 @@ Resources:
             Path: "/mysql"
          Tags:
             - Key: Name
-				  Value: rs-apps-0-efs-mysql
+              Value: rs-apps-0-efs-mysql
    EFSAccessPointMongoDB:
       Type: AWS::EFS::AccessPoint
       Properties:

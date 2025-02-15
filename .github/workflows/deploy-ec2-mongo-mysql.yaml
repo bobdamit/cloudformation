@@ -1,10 +1,10 @@
 name: Deploy Mongo/MySQL EC2 Instance CF Stack
 
 on:
-#  push:
-#    branches: [main]
-#    paths:
-#      - "vpc/iac-mongo-mysql-efs-on-ecsfargate.yaml"
+  push:
+    branches: [main]
+    paths:
+      - "vpc/iac-mongo-mysql-efs-on-ecsfargate.yaml"
   workflow_dispatch:
 
 env:
@@ -69,12 +69,9 @@ jobs:
            parameter-overrides: >-
              AmiId=${{ env.AMI_ID }},
              VpcId=${{ env.VPC_ID }},
-             SubnetId=${{ env.SUBNET_ID }},
-             VolumeId=${{ env.VOLUME_ID }},
-             ComposeS3Bucket=${{ env.DEPLOY_BUCKET }},
-             ComposeS3Key=docker/mongo-mysql-compose.yaml,
-             MongoUser=${{ env.MONGODB_USER }},
+             PrivateSubnet=${{ env.SUBNET_ID }},
+             MongoUsername=${{ env.MONGODB_USER }},
              MongoPassword=${{ secrets.MONGO_PASSWORD }},
-             MySQLRootPassword=${{ secrets.MYSQL_ROOT_PASSWORD }}
+             MySqlRootPassword=${{ secrets.MYSQL_ROOT_PASSWORD }}
            capabilities: CAPABILITY_NAMED_IAM
            no-fail-on-empty-changeset: "1"

@@ -9,12 +9,12 @@ Parameters:
       Type: AWS::EC2::Subnet::Id
       Description: Private Subnet for ECS Tasks
 
-   MongoRootUsername:
+   MongoUsername:
       Description: MongoDB root username.
       Type: String
       NoEcho: true
 
-   MongoRootPassword:
+   MongoPassword:
       Description: MongoDB root password.
       Type: String
       NoEcho: true
@@ -164,9 +164,9 @@ Resources:
                    HostPort: 27017
               Environment:
                  - Name: MONGO_INITDB_ROOT_USERNAME
-                   Value: !Ref MongoRootUsername
+                   Value: !Ref MongoUsername
                  - Name: MONGO_INITDB_ROOT_PASSWORD
-                   Value: !Ref MongoRootPassword
+                   Value: !Ref MongoPassword
               LogConfiguration:
                  LogDriver: awslogs
                  Options:

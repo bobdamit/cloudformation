@@ -59,7 +59,7 @@ jobs:
            template: ${{ env.TEMPLATE_FILE }}
            parameter-overrides: >-
              VpcId=${{ env.VPC_ID }},
-             PrivateSubnets=${{ env.SUBNET_ID }},
+             PrivateSubnet=${{ env.SUBNET_ID }},
              MongoRootUsername=${{ env.MONGODB_USER }},
              MongoRootPassword=${{ secrets.MONGO_PASSWORD }},
              MySqlRootPassword=${{ secrets.MYSQL_ROOT_PASSWORD }}

@@ -165,21 +165,21 @@ Resources:
       Properties:
          VpcEndpointId: !Ref CloudWatchLogsEndpointId
          SecurityGroupIds:
-           - !Ref ECSServiceSecurityGroup
+           - !Ref ECSSecurityGroup
 
    UpdateECRAPIEndpoint:
       Type: AWS::EC2::VPCEndpoint
       Properties:
          VpcEndpointId: !Ref ECRApiEndpointId
          SecurityGroupIds:
-           - !Ref ECSServiceSecurityGroup
+           - !Ref ECSSecurityGroup
 
    UpdateECRDKREndpoint:
       Type: AWS::EC2::VPCEndpoint
       Properties:
          VpcEndpointId: !Ref ECRDkrEndpointId
          SecurityGroupIds:
-           - !Ref ECSServiceSecurityGroup
+           - !Ref ECSSecurityGroup
 
 
    ECSExecutionRole:

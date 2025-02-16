@@ -101,9 +101,6 @@ Resources:
          FromPort: 2049
          ToPort: 2049
          SourceSecurityGroupId: !Ref ECSSecurityGroup
-         Tags:
-            - Key: Name
-              Value: rs-apps-0-efs-sg-ingress
 
    EFSSecurityGroupEgress:
       Type: AWS::EC2::SecurityGroupEgress
@@ -113,9 +110,6 @@ Resources:
          FromPort: 2049
          ToPort: 2049
          DestinationSecurityGroupId: !Ref ECSSecurityGroup
-         Tags:
-            - Key: Name
-              Value: rs-apps-0-efs-sg-egress
 
    ECSSecurityGroupIngressRuleMySQL:
       Type: AWS::EC2::SecurityGroupIngress
@@ -125,9 +119,6 @@ Resources:
          FromPort: 3306
          ToPort: 3306
          CidrIp: 0.0.0.0/0
-         Tags:
-            - Key: Name
-              Value: rs-apps-0-ecs-sg-ingress-mysql
 
    ECSSecurityGroupIngressRuleMongoDB:
       Type: AWS::EC2::SecurityGroupIngress
@@ -137,9 +128,6 @@ Resources:
          FromPort: 27017
          ToPort: 27017
          CidrIp: 0.0.0.0/0
-         Tags:
-            - Key: Name
-              Value: rs-apps-0-ecs-sg-ingress-mongodb
 
    ECSSecurityGroupEgressRule:
       Type: AWS::EC2::SecurityGroupEgress
@@ -149,10 +137,6 @@ Resources:
          FromPort: 2049
          ToPort: 2049
          DestinationSecurityGroupId: !Ref EFSSecurityGroup
-         Tags:
-            - Key: Name
-              Value: rs-apps-0-ecs-sg-egress
-
 
    ECSExecutionRole:
       Type: AWS::IAM::Role
@@ -225,7 +209,7 @@ Resources:
          Volumes:
             - Name: mysql-storage
               EFSVolumeConfiguration:
-                 FileSystemId: !Ref EFSFileSystem
+                 FilesystemId: !Ref EFSFileSystem
                  TransitEncryption: ENABLED
                  AuthorizationConfig:
                     AccessPointId: !Ref EFSAccessPointMySQL
@@ -265,7 +249,7 @@ Resources:
          Volumes:
             - Name: mongodb-storage
               EFSVolumeConfiguration:
-                 FileSystemId: !Ref EFSFileSystem
+                 FilesystemId: !Ref EFSFileSystem
                  TransitEncryption: ENABLED
                  AuthorizationConfig:
                     AccessPointId: !Ref EFSAccessPointMongoDB

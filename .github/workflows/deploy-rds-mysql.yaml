@@ -91,6 +91,6 @@ jobs:
           template: ${{ env.TEMPLATE_FILE }}
           parameter-overrides: >-
              VpcId=${{ env.VPC_ID }},
-             SubnetIds="${PRIVATE_SUBNET_ID1},${PRIVATE_SUBNET_ID2},${PUBLIC_SUBNET_ID1},${PUBLIC_SUBNET_ID2}",
+             SubnetIds="${{ env.PRIVATE_SUBNET_ID1 }},${{ env.PRIVATE_SUBNET_ID2 }},${{ env.PUBLIC_SUBNET_ID1 }},${{ env.PUBLIC_SUBNET_ID2 }}",
              DBMasterUserPassword=${{ secrets.MYSQL_ROOT_PASSWORD }}
           no-fail-on-empty-changeset: "1"

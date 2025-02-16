@@ -49,9 +49,7 @@ Resources:
                OwnerGid: "1000"
                Permissions: "0755"
             Path: "/mysql"
-         Tags:
-            - Key: Name
-              Value: rs-apps-0-efs-mysql
+
    EFSAccessPointMongoDB:
       Type: AWS::EFS::AccessPoint
       Properties:
@@ -65,9 +63,7 @@ Resources:
                OwnerGid: "1000"
                Permissions: "0755"
             Path: "/mongodb"
-         Tags:
-            - Key: Name
-              Value: rs-apps-0-efs-mongodb
+
    EFSMountTarget:
       Type: AWS::EFS::MountTarget
       Properties:

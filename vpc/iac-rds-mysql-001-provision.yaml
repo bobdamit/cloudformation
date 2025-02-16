@@ -48,6 +48,7 @@ Resources:
   DBSubnetGroup:
     Type: AWS::RDS::DBSubnetGroup
     Properties:
+      DBSubnetGroupDescription: RDS MySQL instance subnet group
       SubnetIds: !Ref SubnetIds
 
   DBSecurityGroup:

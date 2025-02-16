@@ -47,7 +47,7 @@ jobs:
       - name: Get Public subnet ID 1
         id: subnet-public1
         run: |
-          PRIVATE_SUBNET_ID=$(aws ec2 describe-subnets \
+          PUBLIC_SUBNET_ID1=$(aws ec2 describe-subnets \
             --filters "Name=tag:Name,Values=${PUB_SUBNET_NAME1}" \
             --query "Subnets[0].SubnetId" \
             --output text)
@@ -57,7 +57,7 @@ jobs:
       - name: Get Public subnet ID 2
         id: subnet-public2
         run: |
-          PRIVATE_SUBNET_ID=$(aws ec2 describe-subnets \
+          PUBLIC_SUBNET_ID2=$(aws ec2 describe-subnets \
             --filters "Name=tag:Name,Values=${PUB_SUBNET_NAME2}" \
             --query "Subnets[0].SubnetId" \
             --output text)
@@ -67,7 +67,7 @@ jobs:
       - name: Get Private subnet ID 1
         id: subnet-private1
         run: |
-          PRIVATE_SUBNET_ID=$(aws ec2 describe-subnets \
+          PRIVATE_SUBNET_ID1=$(aws ec2 describe-subnets \
             --filters "Name=tag:Name,Values=${PRIV_SUBNET_NAME1}" \
             --query "Subnets[0].SubnetId" \
             --output text)
@@ -77,7 +77,7 @@ jobs:
       - name: Get Private subnet ID 2
         id: subnet-private2
         run: |
-          PRIVATE_SUBNET_ID=$(aws ec2 describe-subnets \
+          PRIVATE_SUBNET_ID2=$(aws ec2 describe-subnets \
             --filters "Name=tag:Name,Values=${PRIV_SUBNET_NAME2}" \
             --query "Subnets[0].SubnetId" \
             --output text)

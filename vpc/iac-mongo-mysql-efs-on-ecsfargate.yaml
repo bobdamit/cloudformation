@@ -108,7 +108,7 @@ Resources:
             - Key: Name
               Value: rs-apps-0-efs-sg-ingress
 
-   EFSSecurityGroupEgress:	
+   EFSSecurityGroupEgress:
       Type: AWS::EC2::SecurityGroupEgress
       Properties:
          GroupId: !Ref EFSSecurityGroup

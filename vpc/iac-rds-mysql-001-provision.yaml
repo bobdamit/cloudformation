@@ -76,7 +76,7 @@ Resources:
         - !Ref DBSecurityGroup
       Engine: mysql
       EngineVersion: 8.0.40
-      PubliclyAccessible: false
+      PubliclyAccessible: true
       StorageType: gp2
       EnableCloudwatchLogsExports:
         - audit

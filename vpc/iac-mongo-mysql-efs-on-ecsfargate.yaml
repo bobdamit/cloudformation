@@ -137,7 +137,6 @@ Resources:
          FromPort: 2049
          ToPort: 2049
          DestinationSecurityGroupId: !Ref EFSSecurityGroup
-	
    ECSSecurityGroupEgressHTTPS:
       Type: AWS::EC2::SecurityGroupEgress
       Properties:

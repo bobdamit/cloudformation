@@ -32,8 +32,7 @@ Resources:
           Value: rs-apps-0-vpce-s3
 
 
-  # a public subnet with 4096 addresses
-  PublicSubnet:
+  PublicSubnet1:
     Type: AWS::EC2::Subnet
     Properties:
       VpcId: !Ref VPC
@@ -42,10 +41,20 @@ Resources:
       MapPublicIpOnLaunch: false
       Tags:
         - Key: Name
-          Value: rs-apps-0-subnet-public
+          Value: rs-apps-0-subnet-public-us-east-1a
 
-  # a private subnet with 4096 addresses
-  PrivateSubnet:
+  PublicSubnet2:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      AvailabilityZone: us-east-1b
+      CidrBlock: 10.1.0.0/20
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Name
+          Value: rs-apps-0-subnet-public-us-east-1b
+
+  PrivateSubnet1:
     Type: AWS::EC2::Subnet
     Properties:
       VpcId: !Ref VPC
@@ -55,6 +64,16 @@ Resources:
       Tags:
         - Key: Name
           Value: rs-apps-0-subnet-private1-us-east-1a
+  PrivateSubnet2:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      AvailabilityZone: us-east-1b
+      CidrBlock: 10.1.128.0/20
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Name
+          Value: rs-apps-0-subnet-private1-us-east-1b          
 
   #Internet Gateway 
   InternetGateway:
@@ -94,7 +113,7 @@ Resources:
   PublicSubnetRouteTableAssociation:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
-      SubnetId: !Ref PublicSubnet
+      SubnetId: !Ref PublicSubnet1
       RouteTableId: !Ref PublicRouteTable
 
   # Private Route Table
@@ -110,7 +129,7 @@ Resources:
   PrivateSubnetRouteTableAssociation1:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
-      SubnetId: !Ref PrivateSubnet
+      SubnetId: !Ref PrivateSubnet1
       RouteTableId: !Ref PrivateRouteTable1
 
 Outputs:
@@ -120,21 +139,3 @@ Outputs:
     Value: !Ref VPC
     Export:
       Name: !Sub '${AWS::StackName}-VPCID'
-
-  PublicSubnet:
-    Description: A reference to the public subnet in the 1st Availability Zone
-    Value: !Ref PublicSubnet
-    Export:
-      Name: !Sub '${AWS::StackName}-PublicSubnet'
-
-  PrivateSubnet:
-    Description: A reference to the private subnet in the 1st Availability Zone
-    Value: !Ref PrivateSubnet
-    Export:
-      Name: !Sub '${AWS::StackName}-PrivateSubnet'
-
-  VPCEndpointS3:
-    Description: A reference to the VPC Endpoint for S3
-    Value: !Ref VPCEndpointS3
-    Export:
-      Name: !Sub '${AWS::StackName}-VPCEndpointS3'

@@ -89,8 +89,8 @@ jobs:
              VpcId=${{ env.VPC_ID }},
              PrivateSubnet=${{ env.SUBNET_ID }},
              ECRApiEndpointId=${{ env.VPCE_ID_ECR_API }},
-             ECSDkrEndpointId=${{ env.VPCE_ID_ECR_DKR }},
-             CloudWatchEndpointId=${{ env.VPCE_ID_CLOUDWATCH }},
+             ECRDkrEndpointId=${{ env.VPCE_ID_ECR_DKR }},
+             CloudWatchLogsEndpointId=${{ env.VPCE_ID_CLOUDWATCH }},
              MongoUsername=${{ env.MONGODB_USER }},
              MongoPassword=${{ secrets.MONGO_PASSWORD }},
              MySqlRootPassword=${{ secrets.MYSQL_ROOT_PASSWORD }}

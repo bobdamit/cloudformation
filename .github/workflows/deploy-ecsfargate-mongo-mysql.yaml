@@ -51,7 +51,7 @@ jobs:
           echo "SUBNET_ID=${SUBNET_ID}" >> $GITHUB_ENV
 
       - name: Get VpcEndpoint ID for ECR.api
-        id: vpce
+        id: vpce-api
         run: |
           VPCE_ID=$(aws ec2 describe-vpc-endpoints \
             --filters "Name=tag:Name,Values=rs-apps-0-vpce-ecr-api" \
@@ -61,7 +61,7 @@ jobs:
           echo "VPCE_ID_ECR_API=${VPCE_ID_ECR_API}" >> $GITHUB_ENV
 
       - name: Get VpcEndpoint ID for ECR.dkr
-        id: vpce
+        id: vpce-dkr
         run: |
           VPCE_ID=$(aws ec2 describe-vpc-endpoints \
             --filters "Name=tag:Name,Values=rs-apps-0-vpce-ecr-dkr" \
@@ -71,7 +71,7 @@ jobs:
           echo "VPCE_ID_ECR_DKR=${VPCE_ID_ECR_DKR}" >> $GITHUB_ENV
 
       - name: Get VpcEndpoint ID for CloudWatch
-        id: vpce
+        id: vpce-cloudwatch
         run: |
           VPCE_ID=$(aws ec2 describe-vpc-endpoints \
             --filters "Name=tag:Name,Values=rs-apps-0-vpce-logs" \

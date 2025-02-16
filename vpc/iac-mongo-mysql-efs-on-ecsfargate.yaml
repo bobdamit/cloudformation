@@ -162,10 +162,10 @@ Resources:
          AssumeRolePolicyDocument:
             Statement:
                - Action:
-                     - sts:AssumeRole
-                  Effect: Allow
-                  Principal:
-                     Service: ecs-tasks.amazonaws.com
+                  - sts:AssumeRole
+                     Effect: Allow
+                     Principal:
+                        Service: ecs-tasks.amazonaws.com
          Policies:
             - PolicyName: AmazonECSTaskExecutionRolePolicy
               PolicyDocument:
@@ -189,16 +189,16 @@ Resources:
          AssumeRolePolicyDocument:
             Statement:
                - Action:
-                     - sts:AssumeRole
-                  Effect: Allow
-                  Principal:
-                     Service: ecs-tasks.amazonaws.com
+                  - sts:AssumeRole
+                    Effect: Allow
+                    Principal:
+                       Service: ecs-tasks.amazonaws.com
          Policies:
             - PolicyName: AssumeRole_ECSExecutionRole
               PolicyDocument:
                  Statement:
                     - Action:
-                          - iam:PassRole
+                        - iam:PassRole
                       Effect: Allow
                       Resource: !GetAtt ECSExecutionRole.Arn
          Tags:

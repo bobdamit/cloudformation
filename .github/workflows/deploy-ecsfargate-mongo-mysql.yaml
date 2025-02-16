@@ -60,8 +60,8 @@ jobs:
            parameter-overrides: >-
              VpcId=${{ env.VPC_ID }},
              PrivateSubnet=${{ env.SUBNET_ID }},
-             MongoRootUsername=${{ env.MONGODB_USER }},
-             MongoRootPassword=${{ secrets.MONGO_PASSWORD }},
+             MongoUsername=${{ env.MONGODB_USER }},
+             MongoPassword=${{ secrets.MONGO_PASSWORD }},
              MySqlRootPassword=${{ secrets.MYSQL_ROOT_PASSWORD }}
            capabilities: CAPABILITY_NAMED_IAM
            no-fail-on-empty-changeset: "1"

@@ -4,7 +4,7 @@ on:
   push:
     branches: [main]
     paths:
-      - "vpc/iac-mongo-mysql-efs-on-ecsfargate.yaml"
+      - "vpc/blah blah.yaml"
   workflow_dispatch:
 
 env:

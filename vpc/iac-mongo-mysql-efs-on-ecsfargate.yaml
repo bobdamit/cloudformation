@@ -35,9 +35,7 @@ Resources:
       Properties:
          PerformanceMode: generalPurpose
          ThroughputMode: bursting
-         Tags:
-            - Key: Name
-              Value: rs-apps-0-efs
+
    EFSAccessPointMySQL:
       Type: AWS::EFS::AccessPoint
       Properties:

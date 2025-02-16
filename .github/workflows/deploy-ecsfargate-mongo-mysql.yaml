@@ -3,8 +3,8 @@ name: Deploy Mongo/MySQL On ECS/Fargate CF Stack
 on:
   push:
     branches: [main]
-    paths:
-      - "vpc/iac-mongo-mysql-efs-on-ecsfargate.yaml"
+#    paths:
+#      - "vpc/iac-mongo-mysql-efs-on-ecsfargate.yaml"
   workflow_dispatch:
 
 env:

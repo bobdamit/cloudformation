@@ -88,7 +88,7 @@ jobs:
         uses: aws-actions/aws-cloudformation-github-deploy@master
         with:
           name: rs-apps-0
-          template: vpc/iac-apps-vpc-and-more.yaml
+          template: ${{ env.TEMPLATE_FILE }}
           parameter-overrides: >-
              VpcId=${{ env.VPC_ID }},
              SubnetIds=${{ env.PRIVATE_SUBNET_ID1 }},${{ env.PRIVATE_SUBNET_ID2 }},${{ env.PUBLIC_SUBNET_ID1 }},${{ env.PUBLIC_SUBNET_ID2 }},

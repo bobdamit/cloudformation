@@ -63,7 +63,7 @@ Resources:
       MapPublicIpOnLaunch: false
       Tags:
         - Key: Name
-          Value: rs-apps-0-subnet-private1-us-east-1a
+          Value: rs-apps-0-subnet-private-us-east-1a
   PrivateSubnet2:
     Type: AWS::EC2::Subnet
     Properties:
@@ -73,7 +73,7 @@ Resources:
       MapPublicIpOnLaunch: false
       Tags:
         - Key: Name
-          Value: rs-apps-0-subnet-private1-us-east-1b          
+          Value: rs-apps-0-subnet-private-us-east-1b          
 
   #Internet Gateway 
   InternetGateway:

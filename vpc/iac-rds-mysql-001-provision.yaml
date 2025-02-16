@@ -1,0 +1,94 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'AWS CloudFormation template to create an RDS MySQL instance'
+
+Parameters:
+
+  DBInstanceClass:
+    Description: The instance type for the RDS instance
+    Type: String
+    Default: db.t4g.micro
+    AllowedValues:
+      - db.t4g.micro
+
+  DBAllocatedStorage:
+    Description: The allocated storage for the RDS instance (in GB)
+    Type: Number
+    Default: 20
+    MinValue: 20
+    MaxValue: 1000
+
+  DBBackupRetentionPeriod:
+    Description: The number of days to retain automated backups
+    Type: Number
+    Default: 1
+    MinValue: 1
+    MaxValue: 35
+
+  DBMasterUsername:
+    Description: The master username for the RDS instance
+    Type: String
+    Default: admin
+
+  DBMasterUserPassword:
+    Description: The master user password for the RDS instance
+    Type: String
+    NoEcho: true
+
+  SubnetIds:
+    Description: The subnet IDs for the RDS instance
+    Type: CommaDelimitedList
+    ConstraintDescription: Must be a list of valid subnet IDs
+
+Resources:
+
+  DBSubnetGroup:
+    Type: AWS::RDS::DBSubnetGroup
+    Properties:
+      SubnetIds: !Ref SubnetIds
+
+  DBSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Created by RDS management console
+      GroupName: rds-mysql-sg
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 3306
+          ToPort: 3306
+          CidrIp: 68.14.8.112/32
+      VpcId: vpc-0d02c67c2163f6e1d
+
+  DBInstance:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBName: !Ref DBName
+      DBInstanceClass: !Ref DBInstanceClass
+      AllocatedStorage: !Ref DBAllocatedStorage
+      BackupRetentionPeriod: !Ref DBBackupRetentionPeriod
+      MasterUsername: !Ref DBMasterUsername
+      MasterUserPassword: !Ref DBMasterUserPassword
+      DBSubnetGroupName: !Ref DBSubnetGroup
+      VPCSecurityGroups:
+        - !Ref DBSecurityGroup
+      Engine: mysql
+      EngineVersion: 8.0.40
+      PubliclyAccessible: false
+      StorageType: gp2
+      EnableCloudwatchLogsExports:
+        - audit
+        - error
+        - general
+        - slowquery
+      DBParameterGroupName: default.mysql8.0
+      OptionGroupName: default:mysql-8-0
+      MaxAllocatedStorage: 1000
+      CACertificateIdentifier: rds-ca-rsa2048-g1
+    DeletionPolicy: Snapshot
+
+Outputs:
+
+  DBInstanceEndpoint:
+    Description: The connection endpoint for the database
+    Value: !GetAtt DBInstance.Endpoint.Address
+    Export:
+      Name: !Sub '${AWS::StackName}-DBInstanceEndpoint'

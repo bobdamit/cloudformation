@@ -71,10 +71,6 @@ jobs:
            template: ${{ env.TEMPLATE_FILE }}
            parameter-overrides: >-
              VpcId=${{ env.VPC_ID }},
-             PrivateSubnet=${{ env.PRIVATE_SUBNET_ID }},
-             PublicSubnet=${{ env.PUBLIC_SUBNET_ID }},
-             MongoUsername=${{ env.MONGODB_USER }},
-             MongoPassword=${{ secrets.MONGO_PASSWORD }},
-             MySqlRootPassword=${{ secrets.MYSQL_ROOT_PASSWORD }}
+             DBMasterUserPassword=${{ secrets.MYSQL_ROOT_PASSWORD }}
            capabilities: CAPABILITY_NAMED_IAM
            no-fail-on-empty-changeset: "1"

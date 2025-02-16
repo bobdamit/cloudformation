@@ -1,0 +1,85 @@
+name: Deploy RDS Instance
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "vpc/iac-apps-vpc-and-more.yaml"
+      - ".github/workflows/deploy-vpc-apps0-single-az.yaml"
+  workflow_dispatch:
+
+
+env:
+  AWS_REGION: us-east-1
+  STACK_NAME: iac-rds-mysql-001-provision
+  TEMPLATE_FILE: vpc/iac-rds-mysql-001-provision.yaml
+  VPC_NAME: rs-apps-0-vpc
+  PUB_SUBNET_NAME1: rs-apps-0-subnet-public-us-east-1a
+  PUB_SUBNET_NAME2: rs-apps-0-subnet-public-us-east-1b
+  PRIV_SUBNET_NAME1: rs-apps-0-subnet-private-us-east-1a
+  PRIV_SUBNET_NAME2: rs-apps-0-subnet-private-us-east-1b
+
+jobs:
+  deploy-rds-mysql:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Get Public subnet ID 1
+        id: subnet-public1
+        run: |
+          PRIVATE_SUBNET_ID=$(aws ec2 describe-subnets \
+            --filters "Name=tag:Name,Values=${PUB_SUBNET_NAME1}" \
+            --query "Subnets[0].SubnetId" \
+            --output text)
+          echo "Resolved Private Subnet ID: $PUBLIC_SUBNET_ID1"
+          echo "PUBLIC_SUBNET_ID1=${PUBLIC_SUBNET_ID1}" >> $GITHUB_ENV
+
+      - name: Get Public subnet ID 2
+        id: subnet-public2
+        run: |
+          PRIVATE_SUBNET_ID=$(aws ec2 describe-subnets \
+            --filters "Name=tag:Name,Values=${PUB_SUBNET_NAME2}" \
+            --query "Subnets[0].SubnetId" \
+            --output text)
+          echo "Resolved Private Subnet ID: $PUBLIC_SUBNET_ID2"
+          echo "PUBLIC_SUBNET_ID2=${PUBLIC_SUBNET_ID2}" >> $GITHUB_ENV
+
+      - name: Get Private subnet ID 1
+        id: subnet-private1
+        run: |
+          PRIVATE_SUBNET_ID=$(aws ec2 describe-subnets \
+            --filters "Name=tag:Name,Values=${PRIV_SUBNET_NAME1}" \
+            --query "Subnets[0].SubnetId" \
+            --output text)
+          echo "Resolved Private Subnet ID: $PRIVATE_SUBNET_ID1"
+          echo "PRIVATE_SUBNET_ID1=${PRIVATE_SUBNET_ID1}" >> $GITHUB_ENV
+      
+      - name: Get Private subnet ID 2
+        id: subnet-private2
+        run: |
+          PRIVATE_SUBNET_ID=$(aws ec2 describe-subnets \
+            --filters "Name=tag:Name,Values=${PRIV_SUBNET_NAME2}" \
+            --query "Subnets[0].SubnetId" \
+            --output text)
+          echo "Resolved Private Subnet ID: $PRIVATE_SUBNET_ID2"
+          echo "PRIVATE_SUBNET_ID2=${PRIVATE_SUBNET_ID2}" >> $GITHUB_ENV     
+
+      - name: Deploy CloudFormation stack
+        uses: aws-actions/aws-cloudformation-github-deploy@master
+        with:
+          name: rs-apps-0
+          template: vpc/iac-apps-vpc-and-more.yaml
+          parameter-overrides: >-
+             VpcId=${{ env.VPC_ID }},
+             SubnetIds=${{ env.PRIVATE_SUBNET_ID1 }},{{ env.PRIVATE_SUBNET_ID2 }},{{ env.PUBLIC_SUBNET_ID1  }},{{ env.PUBLIC_SUBNET_ID2  }}
+             DBMasterUserPassword=${{ secrets.MYSQL_ROOT_PASSWORD }}
+          no-fail-on-empty-changeset: "1"

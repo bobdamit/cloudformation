@@ -18,7 +18,7 @@ env:
   DEPLOY_BUCKET: rs-deploy-artifacts-0
 
 jobs:
-  deploy:
+  deploy-mongo-mysql-ecsfargate:
     runs-on: ubuntu-latest
 
     steps:

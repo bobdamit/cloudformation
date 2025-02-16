@@ -275,7 +275,7 @@ Resources:
                   - !Ref PublicSubnet
                SecurityGroups:
                   - !Ref ECSSecurityGroup
-               AssignPublicIp: DISABLED
+               AssignPublicIp: ENABLED
 
    MongoDBService:
       Type: AWS::ECS::Service
@@ -290,7 +290,7 @@ Resources:
                   - !Ref PublicSubnet
                SecurityGroups:
                   - !Ref ECSSecurityGroup
-               AssignPublicIp: DISABLED
+               AssignPublicIp: ENABLED
 
 Outputs:
    ECSClusterName:

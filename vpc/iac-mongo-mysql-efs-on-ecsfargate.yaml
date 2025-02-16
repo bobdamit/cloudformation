@@ -160,25 +160,17 @@ Resources:
       Type: AWS::IAM::Role
       Properties:
          AssumeRolePolicyDocument:
+            Version: "2012-10-17"
             Statement:
-               - Action:
-                  - sts:AssumeRole
-                     Effect: Allow
-                     Principal:
-                        Service: ecs-tasks.amazonaws.com
-         Policies:
-            - PolicyName: AmazonECSTaskExecutionRolePolicy
-              PolicyDocument:
-                 Statement:
-                    - Action:
-                          - ecr:GetAuthorizationToken
-                          - ecr:BatchCheckLayerAvailability
-                          - ecr:GetDownloadUrlForLayer
-                          - ecr:BatchGetImage
-                          - logs:CreateLogStream
-                          - logs:PutLogEvents
-                      Effect: Allow
-                      Resource: "*"
+               - Effect: Allow
+                 Principal:
+                    Service: ecs-tasks.amazonaws.com
+                 Action: sts:AssumeRole
+         ManagedPolicyArns:
+            - arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy
+            - arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly
+            - arn:aws:iam::aws:policy/CloudWatchLogsFullAccess
+            - arn:aws:iam::aws:policy/AmazonElasticFileSystemClientFullAccess 
          Tags:
             - Key: Name
               Value: rs-apps-0-ecs-execution-role
@@ -187,20 +179,17 @@ Resources:
       Type: AWS::IAM::Role
       Properties:
          AssumeRolePolicyDocument:
+            Version: "2012-10-17"
             Statement:
-               - Action:
-                  - sts:AssumeRole
-                    Effect: Allow
-                    Principal:
-                       Service: ecs-tasks.amazonaws.com
-         Policies:
-            - PolicyName: AssumeRole_ECSExecutionRole
-              PolicyDocument:
-                 Statement:
-                    - Action:
-                        - iam:PassRole
-                      Effect: Allow
-                      Resource: !GetAtt ECSExecutionRole.Arn
+               - Effect: Allow
+                 Principal:
+                    Service: ecs-tasks.amazonaws.com
+                 Action: sts:AssumeRole
+         ManagedPolicyArns:
+            - arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy
+            - arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly
+            - arn:aws:iam::aws:policy/CloudWatchLogsFullAccess
+            - arn:aws:iam::aws:policy/AmazonElasticFileSystemClientFullAccess 
          Tags:
             - Key: Name
               Value: rs-apps-0-ecs-task-role

@@ -87,7 +87,7 @@ jobs:
       - name: Deploy CloudFormation stack
         uses: aws-actions/aws-cloudformation-github-deploy@master
         with:
-          name: rs-apps-0
+          name: rs-rds-mysql-001
           template: ${{ env.TEMPLATE_FILE }}
           parameter-overrides: >-
              VpcId=${{ env.VPC_ID }},

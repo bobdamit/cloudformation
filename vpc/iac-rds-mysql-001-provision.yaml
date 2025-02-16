@@ -40,7 +40,7 @@ Parameters:
 
   SubnetIds:
     Description: The subnet IDs for the RDS instance
-    Type: List<AWS::EC2::Subnet::Id>
+    Type: CommaDelimitedList
     ConstraintDescription: Must be a list of valid subnet IDs
 
 Resources:

@@ -8,6 +8,15 @@ Parameters:
    PrivateSubnet:
       Type: AWS::EC2::Subnet::Id
       Description: Private Subnet for ECS Tasks
+   ECRApiEndpointId:
+      Type: String
+      Description: ID of existing ECR API VPC Endpoint
+   ECRDkrEndpointId:
+      Type: String
+      Description: ID of existing ECR Docker VPC Endpoint
+   CloudWatchLogsEndpointId:
+      Type: String
+      Description: ID of existing CloudWatch Logs VPC Endpoint
 
    MongoUsername:
       Description: MongoDB root username.
@@ -150,6 +159,29 @@ Resources:
             - Key: Name
               Value: rs-apps-0-ecs-sg-egress
 
+   # Add the ECS Security Group to the existing VPC Endpoints
+   ECRApiEndpointSecurityGroupAssociation:
+      Type: AWS::EC2::VPCEndpointSecurityGroupAssociation
+   Properties:
+      VpcEndpointId: !Ref ECRApiEndpointId
+      SecurityGroupIds: 
+         - !Ref ECSSecurityGroup
+
+   ECRDkrEndpointSecurityGroupAssociation:
+      Type: AWS::EC2::VPCEndpointSecurityGroupAssociation
+      Properties:
+         VpcEndpointId: !Ref ECRDkrEndpointId
+         SecurityGroupIds: 
+            - !Ref ECSSecurityGroup
+
+   CloudWatchLogsEndpointSecurityGroupAssociation:
+      Type: AWS::EC2::VPCEndpointSecurityGroupAssociation
+      Properties:
+         VpcEndpointId: !Ref CloudWatchLogsEndpointId
+         SecurityGroupIds: 
+            - !Ref ECSSecurityGroup
+
+
    ECSExecutionRole:
       Type: AWS::IAM::Role
       Properties:
@@ -266,37 +298,7 @@ Resources:
                  AuthorizationConfig:
                     AccessPointId: !Ref EFSAccessPointMongoDB
 
-   ECSExecutionRole:
-      Type: AWS::IAM::Role
-      Properties:
-         AssumeRolePolicyDocument:
-            Version: "2012-10-17"
-            Statement:
-               - Effect: Allow
-                 Principal:
-                    Service: ecs-tasks.amazonaws.com
-                 Action: sts:AssumeRole
-         ManagedPolicyArns:
-            - arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy
-            - arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly
-            - arn:aws:iam::aws:policy/CloudWatchLogsFullAccess
-            - arn:aws:iam::aws:policy/AmazonElasticFileSystemClientFullAccess 
 
-   ECSTaskRole:
-      Type: AWS::IAM::Role
-      Properties:
-         AssumeRolePolicyDocument:
-            Version: "2012-10-17"
-            Statement:
-               - Effect: Allow
-                 Principal:
-                    Service: ecs-tasks.amazonaws.com
-                 Action: sts:AssumeRole
-         ManagedPolicyArns:
-            - arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy
-            - arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly
-            - arn:aws:iam::aws:policy/CloudWatchLogsFullAccess
-            - arn:aws:iam::aws:policy/AmazonElasticFileSystemClientFullAccess 
    CloudWatchLogsGroup:
       Type: AWS::Logs::LogGroup
       Properties:

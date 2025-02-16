@@ -14,6 +14,7 @@ env:
   MONGODB_USER: userofthemongo
   VPC_NAME: rs-apps-0-vpc
   PRIVATE_SUBNET_NAME: rs-apps-0-subnet-private1-us-east-1a
+  PUBLIC_SUBNET_NAME: rs-apps-0-subnet-public
   DEPLOY_BUCKET: rs-deploy-artifacts-0
 
 jobs:
@@ -40,45 +41,27 @@ jobs:
           echo "Resolved VPC ID: $VPC_ID"
           echo "VPC_ID=$VPC_ID" >> $GITHUB_ENV
 
-      - name: Get subnet IDs
-        id: subnet
+      - name: Get Private subnet ID
+        id: subnet-private
         run: |
-          SUBNET_ID=$(aws ec2 describe-subnets \
+          PRIVATE_SUBNET_ID=$(aws ec2 describe-subnets \
             --filters "Name=tag:Name,Values=${PRIVATE_SUBNET_NAME}" \
             --query "Subnets[0].SubnetId" \
             --output text)
-          echo "Resolved Private Subnet ID: $SUBNET_ID"
-          echo "SUBNET_ID=${SUBNET_ID}" >> $GITHUB_ENV
+          echo "Resolved Private Subnet ID: $PRIVATE_SUBNET_ID"
+          echo "PRIVATE_SUBNET_ID=${PRIVATE_SUBNET_ID}" >> $GITHUB_ENV
 
-      - name: Get VpcEndpoint ID for ECR.api
-        id: vpce-api
+      - name: Get Public subnet ID
+        id: subnet-public
         run: |
-          VPCE_ID=$(aws ec2 describe-vpc-endpoints \
-            --filters "Name=tag:Name,Values=rs-apps-0-vpce-ecr-api" \
-            --query "VpcEndpoints[0].VpcEndpointId" \
+          PUBLIC_SUBNET_ID=$(aws ec2 describe-subnets \
+            --filters "Name=tag:Name,Values=${PUBLIC_SUBNET_NAME}" \
+            --query "Subnets[0].SubnetId" \
             --output text)
-          echo "Resolved VpcEndpoint for ECR.api ID: $VPCE_ID_ECR_API"
-          echo "VPCE_ID_ECR_API=${VPCE_ID_ECR_API}" >> $GITHUB_ENV
+          echo "Resolved Public Subnet ID: $PUBLIC_SUBNET_ID"
+          echo "PUBLIC_SUBNET_ID=${PUBLIC_SUBNET_ID}" >> $GITHUB_ENV
 
-      - name: Get VpcEndpoint ID for ECR.dkr
-        id: vpce-dkr
-        run: |
-          VPCE_ID=$(aws ec2 describe-vpc-endpoints \
-            --filters "Name=tag:Name,Values=rs-apps-0-vpce-ecr-dkr" \
-            --query "VpcEndpoints[0].VpcEndpointId" \
-            --output text)
-          echo "Resolved VpcEndpoint for ECR.dkr ID: $VPCE_ID_ECR_DKR"
-          echo "VPCE_ID_ECR_DKR=${VPCE_ID_ECR_DKR}" >> $GITHUB_ENV
 
-      - name: Get VpcEndpoint ID for CloudWatch
-        id: vpce-cloudwatch
-        run: |
-          VPCE_ID=$(aws ec2 describe-vpc-endpoints \
-            --filters "Name=tag:Name,Values=rs-apps-0-vpce-logs" \
-            --query "VpcEndpoints[0].VpcEndpointId" \
-            --output text)
-          echo "Resolved VpcEndpoint for CloudWatch ID: $VPCE_ID_CLOUDWATCH"
-          echo "VPCE_ID_CLOUDWATCH=${VPCE_ID_CLOUDWATCH}" >> $GITHUB_ENV  
 
       -  name: Deploy CloudFormation stack
          uses: aws-actions/aws-cloudformation-github-deploy@master
@@ -87,10 +70,8 @@ jobs:
            template: ${{ env.TEMPLATE_FILE }}
            parameter-overrides: >-
              VpcId=${{ env.VPC_ID }},
-             PrivateSubnet=${{ env.SUBNET_ID }},
-             ECRApiEndpointId=${{ env.VPCE_ID_ECR_API }},
-             ECRDkrEndpointId=${{ env.VPCE_ID_ECR_DKR }},
-             CloudWatchLogsEndpointId=${{ env.VPCE_ID_CLOUDWATCH }},
+             PrivateSubnet=${{ env.PRIVATE_SUBNET_ID }},
+             PublicSubnet=${{ env.PUBLIC_SUBNET_ID }},
              MongoUsername=${{ env.MONGODB_USER }},
              MongoPassword=${{ secrets.MONGO_PASSWORD }},
              MySqlRootPassword=${{ secrets.MYSQL_ROOT_PASSWORD }}

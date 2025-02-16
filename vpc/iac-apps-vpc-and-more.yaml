@@ -31,85 +31,15 @@ Resources:
         - Key: Name
           Value: rs-apps-0-vpce-s3
 
-  #VPCE interface endpoint for ECR containers
-  ECRDockerEndpoint:
-    Type: AWS::EC2::VPCEndpoint
-    Properties:
-      VpcId: !Ref VPC
-      ServiceName: !Sub com.amazonaws.${AWS::Region}.ecr.dkr
-      VpcEndpointType: Interface
-      PrivateDnsEnabled: true
-      SubnetIds: 
-        - !Ref PrivateSubnet
-      SecurityGroupIds:
-        - !Ref VPCEndpointSecurityGroup
-      Tags:
-        - Key: Name
-          Value: rs-apps-0-vpce-ecr-dkr
-
-  # VPC Endpoints for ECR API
-  ECRAPIEndpoint:
-      Type: AWS::EC2::VPCEndpoint
-      Properties:
-        VpcId: !Ref VPC
-        ServiceName: !Sub com.amazonaws.${AWS::Region}.ecr.api
-        VpcEndpointType: Interface
-        PrivateDnsEnabled: true
-        SubnetIds: 
-          - !Ref PrivateSubnet
-        SecurityGroupIds: 
-          - !Ref VPCEndpointSecurityGroup
-        Tags:
-          - Key: Name
-            Value: rs-apps-0-vpce-ecr-api
-
-  # VPC Endpoint for CloudWatch Logs
-  CloudWatchLogsVPCEndpoint:
-    Type: AWS::EC2::VPCEndpoint
-    Properties:
-      ServiceName: !Sub "com.amazonaws.${AWS::Region}.logs" 
-      VpcId: !Ref VPC
-      VpcEndpointType: Interface
-      SubnetIds: 
-        - !Ref PrivateSubnet
-      SecurityGroupIds: 
-        - !Ref VPCEndpointSecurityGroup
-      Tags:
-        - Key: Name
-          Value: rs-apps-0-vpce-logs
-
-
-
-  #Security Group for VPC Endpoints
-  VPCEndpointSecurityGroup:
-      Type: AWS::EC2::SecurityGroup
-      Properties:
-        GroupDescription: Security group for VPC Endpoints
-        VpcId: !Ref VPC
-        SecurityGroupIngress:
-          - IpProtocol: tcp
-            FromPort: 443
-            ToPort: 443
-            CidrIp: 0.0.0.0/0
-        SecurityGroupEgress:
-          - IpProtocol: tcp
-            FromPort: 443
-            ToPort: 443
-            CidrIp: 0.0.0.0/0
-        Tags:
-          - Key: Name
-            Value: rs-apps-0-vpce-sg
-
-
 
   # a public subnet with 4096 addresses
-  PublicSubnet1:
+  PublicSubnet:
     Type: AWS::EC2::Subnet
     Properties:
       VpcId: !Ref VPC
       AvailabilityZone: us-east-1a
       CidrBlock: 10.0.0.0/20
-      MapPublicIpOnLaunch: true
+      MapPublicIpOnLaunch: false
       Tags:
         - Key: Name
           Value: rs-apps-0-subnet-public
@@ -164,7 +94,7 @@ Resources:
   PublicSubnetRouteTableAssociation:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
-      SubnetId: !Ref PublicSubnet1
+      SubnetId: !Ref PublicSubnet
       RouteTableId: !Ref PublicRouteTable
 
   # Private Route Table
@@ -191,11 +121,11 @@ Outputs:
     Export:
       Name: !Sub '${AWS::StackName}-VPCID'
 
-  PublicSubnet1:
+  PublicSubnet:
     Description: A reference to the public subnet in the 1st Availability Zone
-    Value: !Ref PublicSubnet1
+    Value: !Ref PublicSubnet
     Export:
-      Name: !Sub '${AWS::StackName}-PublicSubnet1'
+      Name: !Sub '${AWS::StackName}-PublicSubnet'
 
   PrivateSubnet:
     Description: A reference to the private subnet in the 1st Availability Zone

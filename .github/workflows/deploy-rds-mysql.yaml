@@ -91,6 +91,6 @@ jobs:
           template: vpc/iac-apps-vpc-and-more.yaml
           parameter-overrides: >-
              VpcId=${{ env.VPC_ID }},
-             SubnetIds=${{ env.PRIVATE_SUBNET_ID1 }}\\,${{ env.PRIVATE_SUBNET_ID2 }}\\,${{ env.PUBLIC_SUBNET_ID1 }}\\,${{ env.PUBLIC_SUBNET_ID2 }},
+             SubnetIds=${{ env.PRIVATE_SUBNET_ID1 }},${{ env.PRIVATE_SUBNET_ID2 }},${{ env.PUBLIC_SUBNET_ID1 }},${{ env.PUBLIC_SUBNET_ID2 }},
              DBMasterUserPassword=${{ secrets.MYSQL_ROOT_PASSWORD }}
           no-fail-on-empty-changeset: "1"

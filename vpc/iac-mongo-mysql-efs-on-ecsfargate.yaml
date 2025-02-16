@@ -137,6 +137,15 @@ Resources:
          FromPort: 2049
          ToPort: 2049
          DestinationSecurityGroupId: !Ref EFSSecurityGroup
+	
+   ECSSecurityGroupEgressHTTPS:
+      Type: AWS::EC2::SecurityGroupEgress
+      Properties:
+         GroupId: !Ref ECSSecurityGroup
+         IpProtocol: tcp
+         FromPort: 443
+         ToPort: 443
+         CidrIp: 0.0.0.0/0
 
    ECSExecutionRole:
       Type: AWS::IAM::Role

@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - "vpc/iac-apps-vpc-and-more.yaml"
+      - ".github/workflows/deploy-vpc-apps0-single-az.yaml"
   workflow_dispatch:
 
 jobs:

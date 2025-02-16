@@ -4,8 +4,8 @@ on:
   push:
     branches: [main]
     paths:
-      - "vpc/iac-apps-vpc-and-more.yaml"
-      - ".github/workflows/deploy-vpc-apps0-single-az.yaml"
+      - "vpc/iac-rds-mysql-001-provision.yaml"
+      - ".github/workflows/deploy-rds-mysql.yaml"
   workflow_dispatch:
 
 

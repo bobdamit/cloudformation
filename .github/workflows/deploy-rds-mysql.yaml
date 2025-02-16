@@ -33,6 +33,17 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
+
+      - name: Resolve VPC ID
+        id: resolve-vpc
+        run: |
+          VPC_ID=$(aws ec2 describe-vpcs \
+            --filters "Name=tag:Name,Values=${VPC_NAME}" \
+            --query "Vpcs[0].VpcId" \
+            --output text)
+          echo "Resolved VPC ID: $VPC_ID"
+          echo "VPC_ID=$VPC_ID" >> $GITHUB_ENV
+
       - name: Get Public subnet ID 1
         id: subnet-public1
         run: |

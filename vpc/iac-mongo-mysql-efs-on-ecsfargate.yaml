@@ -160,26 +160,26 @@ Resources:
               Value: rs-apps-0-ecs-sg-egress
 
    # Add the ECS Security Group to the existing VPC Endpoints
-   ECRApiEndpointSecurityGroupAssociation:
-      Type: AWS::EC2::VPCEndpointSecurityGroupAssociation
-   Properties:
-      VpcEndpointId: !Ref ECRApiEndpointId
-      SecurityGroupIds: 
-         - !Ref ECSSecurityGroup
-
-   ECRDkrEndpointSecurityGroupAssociation:
-      Type: AWS::EC2::VPCEndpointSecurityGroupAssociation
-      Properties:
-         VpcEndpointId: !Ref ECRDkrEndpointId
-         SecurityGroupIds: 
-            - !Ref ECSSecurityGroup
-
-   CloudWatchLogsEndpointSecurityGroupAssociation:
-      Type: AWS::EC2::VPCEndpointSecurityGroupAssociation
+   UpdateCloudWatchVPCEndpoint:
+      Type: AWS::EC2::VPCEndpoint
       Properties:
          VpcEndpointId: !Ref CloudWatchLogsEndpointId
-         SecurityGroupIds: 
-            - !Ref ECSSecurityGroup
+         SecurityGroupIds:
+           - !Ref ECSServiceSecurityGroup
+
+   UpdateECRAPIEndpoint:
+      Type: AWS::EC2::VPCEndpoint
+      Properties:
+         VpcEndpointId: !Ref ECRApiEndpointId
+         SecurityGroupIds:
+           - !Ref ECSServiceSecurityGroup
+
+   UpdateECRDKREndpoint:
+      Type: AWS::EC2::VPCEndpoint
+      Properties:
+         VpcEndpointId: !Ref ECRDkrEndpointId
+         SecurityGroupIds:
+           - !Ref ECSServiceSecurityGroup
 
 
    ECSExecutionRole:

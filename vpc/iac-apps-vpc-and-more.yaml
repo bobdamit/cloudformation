@@ -18,6 +18,53 @@ Resources:
         - Key: Name
           Value: rs-apps-0-vpc
 
+  VPCFlowLogsRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: vpc-flow-logs.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: VPCFlowLogsPolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - logs:*
+                Resource: '*'
+
+  VPCFlowLogsGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: /aws/vpc/flowlogs
+      RetentionInDays: 1
+      Tags:
+        - Key: Project
+          Value: rs-apps-0
+
+  VPCFlowLog:
+    Type: AWS::EC2::FlowLog
+    Properties:
+      DeliverLogsPermissionArn: !GetAtt VPCFlowLogsRole.Arn
+      LogGroupName: /aws/vpc/flowlogs
+      ResourceId: !Ref VPC
+      ResourceType: VPC
+      TrafficType: ALL
+  
+  #Cert for rocksci-apps.xyz
+  Certificate:
+    Type: AWS::CertificateManager::Certificate
+    Properties:
+      DomainName: rocksci-apps.xyz # Primary domain
+      SubjectAlternativeNames:
+        - sailtrak.rocksci-apps.xyz # sailtrak
+      ValidationMethod: DNS
+
   #VPC gateway style endpoint for S3
   VPCEndpointS3:
     Type: AWS::EC2::VPCEndpoint

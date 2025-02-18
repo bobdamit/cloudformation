@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: 'AWS CloudFormation template to create an RDS MySQL instance'
+Description: AWS CloudFormation template to create an RDS MySQL instance
 
 Parameters:
 
@@ -95,4 +95,4 @@ Outputs:
     Description: The connection endpoint for the database
     Value: !GetAtt DBInstance.Endpoint.Address
     Export:
-      Name: !Sub '${AWS::StackName}-DBInstanceEndpoint'
+      Name: !Sub ${AWS::StackName}-DBInstanceEndpoint

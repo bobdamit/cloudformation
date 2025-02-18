@@ -63,6 +63,31 @@ Resources:
           CidrIp: 68.14.8.112/32
       VpcId: !Ref VpcId
 
+
+  AuditLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub '/aws/rds/instance/${AWS::StackName}/audit'
+      RetentionInDays: 5
+
+  ErrorLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub '/aws/rds/instance/${AWS::StackName}/error'
+      RetentionInDays: 5
+
+  GeneralLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub '/aws/rds/instance/${AWS::StackName}/general'
+      RetentionInDays: 5
+
+  SlowQueryLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub '/aws/rds/instance/${AWS::StackName}/slowquery'
+      RetentionInDays: 5
+
   DBInstance:
     Type: AWS::RDS::DBInstance
     Properties:

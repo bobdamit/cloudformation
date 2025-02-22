@@ -56,13 +56,13 @@ Resources:
       ResourceType: VPC
       TrafficType: ALL
   
-  #Cert for rocksci-apps.xyz
   Certificate:
     Type: AWS::CertificateManager::Certificate
     Properties:
-      DomainName: rocksci-apps.xyz # Primary domain
+      DomainName: dailytrumpquote.com # Primary domain
       SubjectAlternativeNames:
-        - sailtrak.rocksci-apps.xyz # sailtrak
+        - api.dailytrumpquote.com # API subdomain
+        - www.dailytrumpquote.com # Web subdomain
       ValidationMethod: DNS
 
   #VPC gateway style endpoint for S3

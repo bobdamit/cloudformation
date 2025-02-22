@@ -1,188 +1,198 @@
-AWSTemplateFormatVersion: '2010-09-09'
-Description: 'AWS CloudFormation template to create VPC, Subnets, Internet Gateway, Route Tables, and VPC Endpoint'
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "AWS CloudFormation template to create VPC, Subnets, Internet Gateway, Route Tables, and VPC Endpoint"
 
-# This template will create a VPC with a single public and single private subnet 
+# This template will create a VPC with a single public and single private subnet
 # It also has a gateway endpoint to S3
 
 Resources:
+   #The APPs VPC.  We might want to parameterize this to allow for different environments
+   VPC:
+      Type: AWS::EC2::VPC
+      Properties:
+         CidrBlock: 10.0.0.0/16
+         EnableDnsHostnames: true
+         EnableDnsSupport: true
+         InstanceTenancy: default
+         Tags:
+            - Key: Name
+              Value: rs-apps-0-vpc
 
-  #The APPs VPC.  We might want to parameterize this to allow for different environments
-  VPC:
-    Type: AWS::EC2::VPC
-    Properties:
-      CidrBlock: 10.0.0.0/16
-      EnableDnsHostnames: true
-      EnableDnsSupport: true
-      InstanceTenancy: default
-      Tags:
-        - Key: Name
-          Value: rs-apps-0-vpc
-
-  VPCFlowLogsRole:
-    Type: AWS::IAM::Role
-    Properties:
-      AssumeRolePolicyDocument:
-        Version: '2012-10-17'
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service: vpc-flow-logs.amazonaws.com
-            Action: sts:AssumeRole
-      Policies:
-        - PolicyName: VPCFlowLogsPolicy
-          PolicyDocument:
-            Version: '2012-10-17'
+   VPCFlowLogsRole:
+      Type: AWS::IAM::Role
+      Properties:
+         AssumeRolePolicyDocument:
+            Version: "2012-10-17"
             Statement:
-              - Effect: Allow
-                Action:
-                  - logs:*
-                Resource: '*'
+               - Effect: Allow
+                 Principal:
+                    Service: vpc-flow-logs.amazonaws.com
+                 Action: sts:AssumeRole
+         Policies:
+            - PolicyName: VPCFlowLogsPolicy
+              PolicyDocument:
+                 Version: "2012-10-17"
+                 Statement:
+                    - Effect: Allow
+                      Action:
+                         - logs:*
+                      Resource: "*"
 
-  VPCFlowLogsGroup:
-    Type: AWS::Logs::LogGroup
-    Properties:
-      LogGroupName: /aws/vpc/flowlogs
-      RetentionInDays: 1
-      Tags:
-        - Key: Project
-          Value: rs-apps-0
+   VPCFlowLogsGroup:
+      Type: AWS::Logs::LogGroup
+      Properties:
+         LogGroupName: /aws/vpc/flowlogs
+         RetentionInDays: 1
+         Tags:
+            - Key: Project
+              Value: rs-apps-0
 
-  VPCFlowLog:
-    Type: AWS::EC2::FlowLog
-    Properties:
-      DeliverLogsPermissionArn: !GetAtt VPCFlowLogsRole.Arn
-      LogGroupName: /aws/vpc/flowlogs
-      ResourceId: !Ref VPC
-      ResourceType: VPC
-      TrafficType: ALL
-  
-  Certificate:
-    Type: AWS::CertificateManager::Certificate
-    Properties:
-      DomainName: dailytrumpquote.com # Primary domain
-      SubjectAlternativeNames:
-        - api.dailytrumpquote.com # API subdomain
-        - www.dailytrumpquote.com # Web subdomain
-      ValidationMethod: DNS
+   VPCFlowLog:
+      Type: AWS::EC2::FlowLog
+      Properties:
+         DeliverLogsPermissionArn: !GetAtt VPCFlowLogsRole.Arn
+         LogGroupName: /aws/vpc/flowlogs
+         ResourceId: !Ref VPC
+         ResourceType: VPC
+         TrafficType: ALL
 
-  #VPC gateway style endpoint for S3
-  VPCEndpointS3:
-    Type: AWS::EC2::VPCEndpoint
-    Properties:
-      VpcId: !Ref VPC
-      ServiceName: !Sub 'com.amazonaws.${AWS::Region}.s3'
-      RouteTableIds:
-        - !Ref PrivateRouteTable1
-      VpcEndpointType: Gateway
-      Tags:
-        - Key: Name
-          Value: rs-apps-0-vpce-s3
+   Certificate:
+      Type: AWS::CertificateManager::Certificate
+      Properties:
+         DomainName: dailytrumpquote.com # Primary domain
+         SubjectAlternativeNames:
+            - api.dailytrumpquote.com # API subdomain
+            - www.dailytrumpquote.com # Web subdomain
+         ValidationMethod: DNS
 
+   #Cert for rocksci-apps.xyz
+   RockSciAppsCert:
+      Type: AWS::CertificateManager::Certificate
+      Properties:
+         DomainName: rocksci-apps.xyz # Primary domain
+         SubjectAlternativeNames:
+            - sailtrak.rocksci-apps.xyz # sailtrak
+         ValidationMethod: DNS
+         Tags:
+            - Key: Project
+              Value: rs-apps-0
+            - Key: Name
+              Value: rocksci-apps.xyz
 
-  PublicSubnet1:
-    Type: AWS::EC2::Subnet
-    Properties:
-      VpcId: !Ref VPC
-      AvailabilityZone: us-east-1a
-      CidrBlock: 10.0.0.0/20
-      MapPublicIpOnLaunch: false
-      Tags:
-        - Key: Name
-          Value: rs-apps-0-subnet-public-us-east-1a
+   #VPC gateway style endpoint for S3
+   VPCEndpointS3:
+      Type: AWS::EC2::VPCEndpoint
+      Properties:
+         VpcId: !Ref VPC
+         ServiceName: !Sub "com.amazonaws.${AWS::Region}.s3"
+         RouteTableIds:
+            - !Ref PrivateRouteTable1
+         VpcEndpointType: Gateway
+         Tags:
+            - Key: Name
+              Value: rs-apps-0-vpce-s3
 
-  PublicSubnet2:
-    Type: AWS::EC2::Subnet
-    Properties:
-      VpcId: !Ref VPC
-      AvailabilityZone: us-east-1b
-      CidrBlock: 10.0.128.0/20
-      MapPublicIpOnLaunch: false
-      Tags:
-        - Key: Name
-          Value: rs-apps-0-subnet-public-us-east-1b
+   PublicSubnet1:
+      Type: AWS::EC2::Subnet
+      Properties:
+         VpcId: !Ref VPC
+         AvailabilityZone: us-east-1a
+         CidrBlock: 10.0.0.0/20
+         MapPublicIpOnLaunch: false
+         Tags:
+            - Key: Name
+              Value: rs-apps-0-subnet-public-us-east-1a
 
-  PrivateSubnet1:
-    Type: AWS::EC2::Subnet
-    Properties:
-      VpcId: !Ref VPC
-      AvailabilityZone: us-east-1a
-      CidrBlock: 10.0.16.0/20
-      MapPublicIpOnLaunch: false
-      Tags:
-        - Key: Name
-          Value: rs-apps-0-subnet-private-us-east-1a
-  PrivateSubnet2:
-    Type: AWS::EC2::Subnet
-    Properties:
-      VpcId: !Ref VPC
-      AvailabilityZone: us-east-1b
-      CidrBlock: 10.0.144.0/20
-      MapPublicIpOnLaunch: false
-      Tags:
-        - Key: Name
-          Value: rs-apps-0-subnet-private-us-east-1b          
+   PublicSubnet2:
+      Type: AWS::EC2::Subnet
+      Properties:
+         VpcId: !Ref VPC
+         AvailabilityZone: us-east-1b
+         CidrBlock: 10.0.128.0/20
+         MapPublicIpOnLaunch: false
+         Tags:
+            - Key: Name
+              Value: rs-apps-0-subnet-public-us-east-1b
 
-  #Internet Gateway 
-  InternetGateway:
-    Type: AWS::EC2::InternetGateway
-    Properties:
-      Tags:
-        - Key: Name
-          Value: rs-apps-0-igw
+   PrivateSubnet1:
+      Type: AWS::EC2::Subnet
+      Properties:
+         VpcId: !Ref VPC
+         AvailabilityZone: us-east-1a
+         CidrBlock: 10.0.16.0/20
+         MapPublicIpOnLaunch: false
+         Tags:
+            - Key: Name
+              Value: rs-apps-0-subnet-private-us-east-1a
+   PrivateSubnet2:
+      Type: AWS::EC2::Subnet
+      Properties:
+         VpcId: !Ref VPC
+         AvailabilityZone: us-east-1b
+         CidrBlock: 10.0.144.0/20
+         MapPublicIpOnLaunch: false
+         Tags:
+            - Key: Name
+              Value: rs-apps-0-subnet-private-us-east-1b
 
-  # Association of the Internet Gateway with the VPC
-  InternetGatewayAttachment:
-    Type: AWS::EC2::VPCGatewayAttachment
-    Properties:
-      VpcId: !Ref VPC
-      InternetGatewayId: !Ref InternetGateway
+   #Internet Gateway
+   InternetGateway:
+      Type: AWS::EC2::InternetGateway
+      Properties:
+         Tags:
+            - Key: Name
+              Value: rs-apps-0-igw
 
-  #Public Route Table
-  PublicRouteTable:
-    Type: AWS::EC2::RouteTable
-    Properties:
-      VpcId: !Ref VPC
-      Tags:
-        - Key: Name
-          Value: rs-apps-0-rtb-public
+   # Association of the Internet Gateway with the VPC
+   InternetGatewayAttachment:
+      Type: AWS::EC2::VPCGatewayAttachment
+      Properties:
+         VpcId: !Ref VPC
+         InternetGatewayId: !Ref InternetGateway
 
-  # Route to the Internet Gateway
-  PublicRoute:
-    Type: AWS::EC2::Route
-    DependsOn: InternetGatewayAttachment
-    Properties:
-      RouteTableId: !Ref PublicRouteTable
-      DestinationCidrBlock: 0.0.0.0/0
-      GatewayId: !Ref InternetGateway
+   #Public Route Table
+   PublicRouteTable:
+      Type: AWS::EC2::RouteTable
+      Properties:
+         VpcId: !Ref VPC
+         Tags:
+            - Key: Name
+              Value: rs-apps-0-rtb-public
 
+   # Route to the Internet Gateway
+   PublicRoute:
+      Type: AWS::EC2::Route
+      DependsOn: InternetGatewayAttachment
+      Properties:
+         RouteTableId: !Ref PublicRouteTable
+         DestinationCidrBlock: 0.0.0.0/0
+         GatewayId: !Ref InternetGateway
 
-  # add association to public subnet
-  PublicSubnetRouteTableAssociation:
-    Type: AWS::EC2::SubnetRouteTableAssociation
-    Properties:
-      SubnetId: !Ref PublicSubnet1
-      RouteTableId: !Ref PublicRouteTable
+   # add association to public subnet
+   PublicSubnetRouteTableAssociation:
+      Type: AWS::EC2::SubnetRouteTableAssociation
+      Properties:
+         SubnetId: !Ref PublicSubnet1
+         RouteTableId: !Ref PublicRouteTable
 
-  # Private Route Table
-  PrivateRouteTable1:
-    Type: AWS::EC2::RouteTable
-    Properties:
-      VpcId: !Ref VPC
-      Tags:
-        - Key: Name
-          Value: rs-apps-0-rtb-private1-us-east-1a
-  
-  # add association to private subnet
-  PrivateSubnetRouteTableAssociation1:
-    Type: AWS::EC2::SubnetRouteTableAssociation
-    Properties:
-      SubnetId: !Ref PrivateSubnet1
-      RouteTableId: !Ref PrivateRouteTable1
+   # Private Route Table
+   PrivateRouteTable1:
+      Type: AWS::EC2::RouteTable
+      Properties:
+         VpcId: !Ref VPC
+         Tags:
+            - Key: Name
+              Value: rs-apps-0-rtb-private1-us-east-1a
+
+   # add association to private subnet
+   PrivateSubnetRouteTableAssociation1:
+      Type: AWS::EC2::SubnetRouteTableAssociation
+      Properties:
+         SubnetId: !Ref PrivateSubnet1
+         RouteTableId: !Ref PrivateRouteTable1
 
 Outputs:
-
-  VPC:
-    Description: A reference to the created VPC
-    Value: !Ref VPC
-    Export:
-      Name: !Sub '${AWS::StackName}-VPCID'
+   VPC:
+      Description: A reference to the created VPC
+      Value: !Ref VPC
+      Export:
+         Name: !Sub "${AWS::StackName}-VPCID"

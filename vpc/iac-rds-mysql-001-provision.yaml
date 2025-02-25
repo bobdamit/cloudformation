@@ -60,7 +60,7 @@ Resources:
         - IpProtocol: tcp
           FromPort: 3306
           ToPort: 3306
-          CidrIp: 68.14.8.112/32
+          CidrIp: 0.0.0.0/0
       VpcId: !Ref VpcId
 
 

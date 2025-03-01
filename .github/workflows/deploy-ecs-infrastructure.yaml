@@ -4,10 +4,10 @@ on:
 #    branches:
 #     - main
 
-  paths:
-    - 'vpc/iac-ecs-apps-cluster0.yaml'
-    - 'vpc/iac-ecs-roles.yaml'
-    - 'github/workflows/deploy-ecs-infrastructure.yaml'
+    paths:
+      - 'vpc/iac-ecs-apps-cluster0.yaml'
+      - 'vpc/iac-ecs-roles.yaml'
+      - 'github/workflows/deploy-ecs-infrastructure.yaml'
 
   workflow_dispatch:
 

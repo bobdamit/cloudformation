@@ -1,0 +1,41 @@
+name: deploy ecs infrastructure
+on:
+  push:
+#    branches:
+#     - main
+
+  paths:
+    - 'vpc/iac-ecs-apps-cluster0.yaml'
+    - 'vpc/iac-ecs-roles.yaml'
+    - 'github/workflows/deploy-ecs-infrastructure.yaml'
+
+  workflow_dispatch:
+
+
+jobs:
+  deploy-iac:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1
+
+    - name: Deploy ECS Roles template
+      uses: aws-actions/aws-cloudformation-github-deploy@master
+      with:
+        name: rs-ecs-roles
+        template: vpc/iac-ecs-roles.yaml
+        no-fail-on-empty-changeset: "1"
+
+    - name: Deploy ECS Cluster and Instance Template
+      uses: aws-actions/aws-cloudformation-github-deploy@master
+      with:
+        name: rs-apps-ecs-cluster-0
+        template: vpc/iac-ecs-apps-cluster0.yaml
+        no-fail-on-empty-changeset: "1"
+

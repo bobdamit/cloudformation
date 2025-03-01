@@ -1,0 +1,65 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Shared IAM Roles for ECS Services
+
+Resources:
+  TaskRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ecs-tasks.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: ECSTaskPolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - ssmmessages:*
+                Resource: '*'
+      Tags:
+        - Key: Project
+          Value: RS-Infrastructure
+
+  ExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: ecs-tasks.amazonaws.com
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy
+      Policies:
+        - PolicyName: ECSExecutionRolePolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Action:
+                  - ecr:*
+                  - logs:*
+                Effect: Allow
+                Resource: '*'
+      Tags:
+        - Key: Project
+          Value: RS-Infrastructure
+
+Outputs:
+  TaskRoleArn:
+    Description: ECS Task Role ARN
+    Value: !GetAtt TaskRole.Arn
+    Export:
+      Name: ECSTaskRoleArn
+  
+  ExecutionRoleArn:
+    Description: ECS Execution Role ARN
+    Value: !GetAtt ExecutionRole.Arn
+    Export:
+      Name: ECSExecutionRoleArn

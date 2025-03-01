@@ -9,6 +9,11 @@ Parameters:
     Default: db.t4g.micro
     AllowedValues:
       - db.t4g.micro
+      - db.t3.micro
+      - db.r5.large
+      - db.t3.small
+      - db.m5.large
+      - db.t3.large
 
   DBAllocatedStorage:
     Description: The allocated storage for the RDS instance (in GB)

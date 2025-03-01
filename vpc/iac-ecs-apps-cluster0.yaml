@@ -1,0 +1,151 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: EC2 / ECS Template for RS Apps - Cluster 0
+
+Parameters:
+  VPCId:
+    Type: AWS::EC2::VPC::Id
+  PublicSubnetId1:
+    Type: AWS::EC2::Subnet::Id
+  ImageId:
+    Type: String
+    Description: AMI ID for the service
+  InstanceType:
+    Type: String
+    Default: t3.micro
+    Description: EC2 instance type for ECS tasks
+  KeyPairName:
+    Type: AWS::EC2::KeyPair::KeyName
+    Default: ecs-keypair
+    Description: Existing Keypair
+
+Resources:
+  LogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: /ecs/rs-apps-ecs-service-0
+      RetentionInDays: 5
+      Tags:
+        - Key: Project
+          Value: RS-Infrastructure
+
+
+
+  RSAppsECSCluster0:
+    Type: AWS::ECS::Cluster
+    Properties:
+      ClusterName: rs-apps-ecs-cluster-0
+      Tags:
+        - Key: Project
+          Value: RS-Infrastructure
+
+
+
+  RSECSSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: RSECSSecurityGroup
+      GroupDescription: RSECSSecurityGroup
+      VpcId: !Ref VPCId
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 8888
+          ToPort: 8888
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: icmp
+          FromPort: -1
+          ToPort: -1
+          CidrIp: 0.0.0.0/0
+      SecurityGroupEgress:
+        - IpProtocol: -1
+          FromPort: -1
+          ToPort: -1
+          CidrIp: 0.0.0.0/0
+      Tags:
+        - Key: Project
+          Value: RS-Infrastructure
+
+  EC2Role:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ec2.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceforEC2Role
+      Policies:
+        - PolicyName: EC2ENIPermissions
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - ec2:*
+                Resource: '*'
+      Tags:
+        - Key: Project
+          Value: RS-Infrastructure
+
+  EC2InstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Path: /
+      Roles:
+        - !Ref EC2Role
+
+  EC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: !Ref ImageId
+      KeyName: !Ref KeyPairName
+      InstanceType: !Ref InstanceType
+      IamInstanceProfile: !Ref EC2InstanceProfile
+      SubnetId: !Ref PublicSubnetId1
+      SecurityGroupIds:
+        - !Ref RSECSSecurityGroup
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash -xe
+           echo ECS_CLUSTER=${RSAppsECSCluster0} >> /etc/ecs/ecs.config
+           yum install -y aws-cfn-bootstrap
+           /opt/aws/bin/cfn-init -v --stack ${AWS::StackId} --resource ContainerInstances --configsets full_install --region ${AWS::Region} &
+
+      Tags:
+        - Key: Name
+          Value: RS-ECS-Infrastructure
+        - Key: Project
+          Value: RS-Infrastructure
+
+  ElasticIP:
+    Type: AWS::EC2::EIP
+    Properties:
+      Domain: vpc
+      InstanceId: !Ref EC2Instance
+      Tags:
+        - Key: Name
+          Value: rs-ecs-elastic-ip
+        - Key: Project
+          Value: RS-Infrastructure
+
+
+Outputs:
+  ElasticIPAddress:
+    Description: Elastic IP address for the service
+    Value: !Ref ElasticIP
+  LogGroup:
+    Description: CloudWatch Log Group for the service
+    Value: !Ref LogGroup
+  ClusterName:
+    Description: ECS Cluster Name
+    Value: !Ref RSAppsECSCluster0

@@ -9,8 +9,6 @@ on:
       - 'vpc/iac-ecs-roles.yaml'
       - 'github/workflows/deploy-ecs-infrastructure.yaml'
 
-  workflow_dispatch:
-
 
 jobs:
   deploy-iac:

@@ -1,4 +1,4 @@
-name: deploy ecs infrastructure
+name: Deploy ECS infrastructure
 on:
   push:
 #    branches:
@@ -7,7 +7,7 @@ on:
     paths:
       - 'vpc/iac-ecs-apps-cluster0.yaml'
       - 'vpc/iac-ecs-roles.yaml'
-      - 'github/workflows/deploy-ecs-infrastructure.yaml'
+      - '.github/workflows/deploy-ecs-infrastructure.yaml'
 
 
 jobs:

@@ -12,58 +12,66 @@ on:
 jobs:
   deploy-iac:
     runs-on: ubuntu-latest
+
+    env: 
+      VPC_NAME: rs-apps-0-vpc
+      PUB_SUBNET_NAME1: rs-apps-0-subnet-public-us-east-1a
+      PUB_SUBNET_NAME2: rs-apps-0-subnet-public-us-east-1b
+      PRIV_SUBNET_NAME1: rs-apps-0-subnet-private-us-east-1a
+      PRIV_SUBNET_NAME2: rs-apps-0-subnet-private-us-east-1b
+
     steps:
-      - uses: actions/checkout@master
+    - uses: actions/checkout@master
 
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1
 
-      - name: Resolve VPC ID
-        id: resolve-vpc
-        run: |
-          VPC_ID=$(aws ec2 describe-vpcs \
-            --filters "Name=tag:Name,Values=${VPC_NAME}" \
-            --query "Vpcs[0].VpcId" \
-            --output text)
-          echo "Resolved VPC ID: $VPC_ID"
-          echo "VPC_ID=$VPC_ID" >> $GITHUB_ENV
+    - name: Resolve VPC ID
+      id: resolve-vpc
+      run: |
+        VPC_ID=$(aws ec2 describe-vpcs \
+          --filters "Name=tag:Name,Values=${VPC_NAME}" \
+          --query "Vpcs[0].VpcId" \
+          --output text)
+        echo "Resolved VPC ID: $VPC_ID"
+        echo "VPC_ID=$VPC_ID" >> $GITHUB_ENV
 
-      - name: Get Public subnet ID 1
-        id: subnet-public1
-        run: |
-          PUBLIC_SUBNET_ID1=$(aws ec2 describe-subnets \
-            --filters "Name=tag:Name,Values=${PUB_SUBNET_NAME1}" \
-            --query "Subnets[0].SubnetId" \
-            --output text)
-          echo "Resolved Private Subnet ID: $PUBLIC_SUBNET_ID1"
-          echo "PUBLIC_SUBNET_ID1=${PUBLIC_SUBNET_ID1}" >> $GITHUB_ENV
+    - name: Get Public subnet ID 1
+      id: subnet-public1
+      run: |
+        PUBLIC_SUBNET_ID1=$(aws ec2 describe-subnets \
+          --filters "Name=tag:Name,Values=${PUB_SUBNET_NAME1}" \
+          --query "Subnets[0].SubnetId" \
+          --output text)
+        echo "Resolved Private Subnet ID: $PUBLIC_SUBNET_ID1"
+        echo "PUBLIC_SUBNET_ID1=${PUBLIC_SUBNET_ID1}" >> $GITHUB_ENV
 
-      - name: Fetch latest ECS-optimized AMI ID
-        id: fetch-ami
-        run: |
+    - name: Fetch latest ECS-optimized AMI ID
+      id: fetch-ami
+      run: |
           AMI_ID=$(aws ssm get-parameter --name /aws/service/ecs/optimized-ami/amazon-linux-2023/recommended/image_id \
           --query "Parameter.Value" --output text)
           echo "Latest AMI ID: $AMI_ID"
           echo "AMI_ID=$AMI_ID" >> $GITHUB_ENV
 
-      - name: Deploy ECS Roles template
-        uses: aws-actions/aws-cloudformation-github-deploy@master
-        with:
-          name: rs-ecs-roles
-          template: vpc/iac-ecs-roles.yaml
-          no-fail-on-empty-changeset: "1"
+    - name: Deploy ECS Roles template
+      uses: aws-actions/aws-cloudformation-github-deploy@master
+      with:
+        name: rs-ecs-roles
+        template: vpc/iac-ecs-roles.yaml
+        no-fail-on-empty-changeset: "1"
 
-      - name: Deploy ECS Cluster and Instance Template
-        uses: aws-actions/aws-cloudformation-github-deploy@master
-        with:
-          name: rs-apps-ecs-cluster-0
-          template: vpc/iac-ecs-apps-cluster0.yaml
-          parameter-overrides: >-
-            VPCId=${{ env.VPC_ID }},
-            PublicSubnetId1=${{ env.PUBLIC_SUBNET_ID1 }},
-            ImageId=${{ env.AMI_ID }}
-          no-fail-on-empty-changeset: "1"
+    - name: Deploy ECS Cluster and Instance Template
+      uses: aws-actions/aws-cloudformation-github-deploy@master
+      with:
+        name: rs-apps-ecs-cluster-0
+        template: vpc/iac-ecs-apps-cluster0.yaml
+        parameter-overrides: >-
+          VPCId=${{ env.VPC_ID }},
+          PublicSubnetId1=${{ env.PUBLIC_SUBNET_ID1 }},
+          ImageId=${{ env.AMI_ID }}
+        no-fail-on-empty-changeset: "1"

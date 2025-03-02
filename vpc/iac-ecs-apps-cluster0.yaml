@@ -144,12 +144,14 @@ Resources:
 
 
 Outputs:
-  ElasticIPAddress:
-    Description: Elastic IP address for the service
-    Value: !Ref ElasticIP
-  LogGroup:
-    Description: CloudWatch Log Group for the service
-    Value: !Ref LogGroup
-  ClusterName:
-    Description: ECS Cluster Name
-    Value: !Ref RSAppsECSCluster0
+   ElasticIPAddress:
+     Description: Elastic IP address for the service
+     Value: !Ref ElasticIP
+	  Export:
+	    Name: EIPAddressCluster0
+   LogGroup:
+     Description: CloudWatch Log Group for the service
+     Value: !Ref LogGroup
+   ClusterName:
+     Description: ECS Cluster Name
+     Value: !Ref RSAppsECSCluster0

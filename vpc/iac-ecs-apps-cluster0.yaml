@@ -138,7 +138,7 @@ Resources:
       InstanceId: !Ref EC2Instance
       Tags:
         - Key: Name
-          Value: rs-ecs-elastic-ip
+          Value: rs-ecs-elastic-ip-0
         - Key: Project
           Value: RS-Infrastructure
 

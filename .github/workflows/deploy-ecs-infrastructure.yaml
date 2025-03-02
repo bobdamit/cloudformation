@@ -74,5 +74,5 @@ jobs:
           VPCId=${{ env.VPC_ID }},
           PublicSubnetId1=${{ env.PUBLIC_SUBNET_ID1 }},
           ImageId=${{ env.AMI_ID }},
-          InstanceType=t3.small
+          InstanceType=t3.micro
         no-fail-on-empty-changeset: "1"

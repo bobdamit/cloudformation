@@ -73,5 +73,6 @@ jobs:
         parameter-overrides: >-
           VPCId=${{ env.VPC_ID }},
           PublicSubnetId1=${{ env.PUBLIC_SUBNET_ID1 }},
-          ImageId=${{ env.AMI_ID }}
+          ImageId=${{ env.AMI_ID }},
+          InstanceType=t3.small
         no-fail-on-empty-changeset: "1"
